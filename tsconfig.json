@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "sourceMap": true,
+    "outDir": "dist",
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/**/*",
+    "src/server.ts",
+    "config",
+    "api",
+    "models",
+    "middlewares",
+    "src/services"
+  ],
+  "exclude": ["node_modules", "**/*.spec.ts"]
+}
