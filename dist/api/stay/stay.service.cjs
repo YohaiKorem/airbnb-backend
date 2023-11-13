@@ -111,7 +111,7 @@ function _buildCriteria(data) {
     const searchCriteria = _buildSearchCriteria(search);
     return {
         ...filterCriteria,
-        ...searchCriteria,
+        // ...searchCriteria,
     };
 }
 function _buildSearchCriteria(search) {
@@ -136,8 +136,14 @@ function _buildSearchCriteria(search) {
 }
 function _buildFilterCriteria(filter) {
     const criteria = {};
-    if (filter.labels) {
-        criteria['$or'] = [{ labels: filter.labels }, { type: filter.labels }];
+    if (filter.labels && filter.labels.length) {
+        if (Array.isArray(filter.labels))
+            criteria['$or'] = [
+                { labels: filter.labels[0] },
+                { type: filter.labels[0] },
+            ];
+        else
+            criteria['$or'] = [{ labels: filter.labels }, { type: filter.labels }];
     }
     if (filter.equipment) {
         if (filter.equipment.bathNum) {
@@ -151,6 +157,8 @@ function _buildFilterCriteria(filter) {
         }
     }
     if (filter.amenities && filter.amenities.length) {
+        if (!Array.isArray(filter.amenities))
+            filter.amenities = [filter.amenities];
         criteria['amenities'] = { $all: filter.amenities };
     }
     if (filter.superhost === true) {

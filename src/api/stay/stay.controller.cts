@@ -3,7 +3,7 @@ const stayService = require('./stay.service.cjs')
 import { loggerService } from '../../services/logger.service.cjs'
 import { SearchParam, StayFilter } from '../../models/stay.model.cjs'
 async function getStays(req, res) {
-  const {
+  let {
     startDate,
     endDate,
     location,
@@ -16,7 +16,8 @@ async function getStays(req, res) {
     roomType,
     labels,
     amenities,
-  } = req.query
+  } = _parseQuery(req.query)
+
   const search: SearchParam = { startDate, endDate, location, guests }
   const filter: StayFilter = {
     labels,
@@ -28,6 +29,8 @@ async function getStays(req, res) {
     amenities,
     superhost,
   }
+
+  console.log(filter)
 
   try {
     loggerService.debug('Getting Stays')
@@ -140,6 +143,20 @@ async function removeStayMsg(req, res) {
     loggerService.error('Failed to remove stay msg', err)
     res.status(500).send({ err: 'Failed to remove stay msg' })
   }
+}
+function _parseQuery(query) {
+  const res: any = {}
+  for (let [key, value] of Object.entries(query)) {
+    if (typeof value === 'string') {
+      try {
+        res[key] = JSON.parse(value)
+      } catch (error) {
+        res[key] = value
+      }
+    } else res[key] = value
+  }
+
+  return res
 }
 
 module.exports = {

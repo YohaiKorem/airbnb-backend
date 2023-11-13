@@ -130,7 +130,7 @@ function _buildCriteria(data: { filter: StayFilter; search: SearchParam }) {
   const searchCriteria = _buildSearchCriteria(search)
   return {
     ...filterCriteria,
-    ...searchCriteria,
+    // ...searchCriteria,
   }
 }
 
@@ -159,8 +159,13 @@ function _buildSearchCriteria(search: SearchParam) {
 function _buildFilterCriteria(filter: StayFilter) {
   const criteria = {}
 
-  if (filter.labels) {
-    criteria['$or'] = [{ labels: filter.labels }, { type: filter.labels }]
+  if (filter.labels && filter.labels.length) {
+    if (Array.isArray(filter.labels))
+      criteria['$or'] = [
+        { labels: filter.labels[0] },
+        { type: filter.labels[0] },
+      ]
+    else criteria['$or'] = [{ labels: filter.labels }, { type: filter.labels }]
   }
 
   if (filter.equipment) {
@@ -176,6 +181,7 @@ function _buildFilterCriteria(filter: StayFilter) {
   }
 
   if (filter.amenities && filter.amenities.length) {
+    if (!Array.isArray(filter.amenities)) filter.amenities = [filter.amenities]
     criteria['amenities'] = { $all: filter.amenities }
   }
 

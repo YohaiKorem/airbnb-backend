@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const stayService = require('./stay.service.cjs');
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 async function getStays(req, res) {
-    const { startDate, endDate, location, guests, minPrice, maxPrice, equipment, capacity, superhost, roomType, labels, amenities, } = req.query;
+    let { startDate, endDate, location, guests, minPrice, maxPrice, equipment, capacity, superhost, roomType, labels, amenities, } = _parseQuery(req.query);
     const search = { startDate, endDate, location, guests };
     const filter = {
         labels,
@@ -15,6 +15,7 @@ async function getStays(req, res) {
         amenities,
         superhost,
     };
+    console.log(filter);
     try {
         logger_service_cjs_1.loggerService.debug('Getting Stays');
         const stays = await stayService.query({ filter, search });
@@ -121,6 +122,22 @@ async function removeStayMsg(req, res) {
         logger_service_cjs_1.loggerService.error('Failed to remove stay msg', err);
         res.status(500).send({ err: 'Failed to remove stay msg' });
     }
+}
+function _parseQuery(query) {
+    const res = {};
+    for (let [key, value] of Object.entries(query)) {
+        if (typeof value === 'string') {
+            try {
+                res[key] = JSON.parse(value);
+            }
+            catch (error) {
+                res[key] = value;
+            }
+        }
+        else
+            res[key] = value;
+    }
+    return res;
 }
 module.exports = {
     getStays,
