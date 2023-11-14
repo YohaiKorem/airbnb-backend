@@ -5,7 +5,6 @@ import path from 'path'
 import { createServer } from 'http'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
-
 import authRoutes from './api/auth/auth.routes.cjs'
 import userRoutes from './api/user/user.routes.cjs'
 import stayRoutes from './api/stay/stay.routes.cjs'
@@ -43,6 +42,10 @@ if (process.env.NODE_ENV === 'production') {
 
 // Routes
 // app.all('*', setupAsyncLocalStorage);
+
+// for initiating data
+// import stayService from './api/stay/stay.service.cjs'
+// stayService.initData('stay')
 
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)

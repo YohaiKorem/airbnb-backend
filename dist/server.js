@@ -38,6 +38,9 @@ else {
 }
 // Routes
 // app.all('*', setupAsyncLocalStorage);
+// for initiating data
+// import stayService from './api/stay/stay.service.cjs'
+// stayService.initData('stay')
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/order', orderRoutes);

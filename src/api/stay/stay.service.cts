@@ -3,7 +3,6 @@ import { loggerService } from '../../services/logger.service.cjs'
 import { utilService } from '../../services/util.service.cjs'
 import { ObjectId } from 'mongodb'
 import { Stay, StayFilter, SearchParam } from '../../models/stay.model.cjs'
-
 export async function query(data) {
   const criteria = _buildCriteria(data)
 
@@ -130,7 +129,7 @@ function _buildCriteria(data: { filter: StayFilter; search: SearchParam }) {
   const searchCriteria = _buildSearchCriteria(search)
   return {
     ...filterCriteria,
-    // ...searchCriteria,
+    ...searchCriteria,
   }
 }
 
@@ -204,27 +203,40 @@ function _buildFilterCriteria(filter: StayFilter) {
 }
 
 // export async function initData(entity) {
-//   const entities = require(`../../data/${entity}.json`)
-
-//   // Convert string _id to ObjectId
+//   const entities = require(`../../../src/data/${entity}.json`)
+//   // Convert string _id to ObjectId and update loc field
 //   const entitiesWithObjectId = entities.map((entity) => {
 //     if (entity._id && typeof entity._id === 'string') {
-//       // If the _id is a valid ObjectId string, use it, otherwise generate a new ObjectId
 //       try {
 //         entity._id = new ObjectId(entity._id)
 //       } catch (error) {
 //         entity._id = new ObjectId()
 //       }
 //     }
+
+//     var newLoc = {
+//       type: 'Point',
+//       coordinates: [entity.loc.lng, entity.loc.lat],
+//       country: entity.loc.country,
+//       countryCode: entity.loc.countryCode,
+//       city: entity.loc.city,
+//       address: entity.loc.address,
+//     }
+
+//     entity.loc = newLoc
 //     return entity
 //   })
 
 //   try {
 //     const collection = await dbService.getCollection(entity)
-//     const res = await collection.insertMany(entitiesWithObjectId)
-//     console.log('Inserted entities with ObjectId:', res)
+//     await collection.insertMany(entitiesWithObjectId)
+//     console.log('Inserted entities with ObjectId')
+
+//     // Create a 2dsphere index on the loc field
+//     await collection.createIndex({ loc: '2dsphere' })
+//     console.log('2dsphere index created on loc field')
 //   } catch (err) {
-//     logger.error('Failed to insert entities', err)
+//     loggerService.error('Failed to insert entities or create index', err)
 //   }
 // }
 
@@ -237,4 +249,5 @@ module.exports = {
   updateStayMsg,
   addStayMsg,
   removeStayMsg,
+  // initData,
 }

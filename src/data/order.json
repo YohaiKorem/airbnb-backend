@@ -1,0 +1,252 @@
+[
+  {
+    "_id": "622f3403e36c57e6164faf94",
+    "hostId": "622f3403e36c59e6164faf93",
+    "buyer": {
+      "_id": "622f3401e36c59e6164fab4d",
+      "fullname": "Edgar",
+      "imgUrl": "https://a0.muscache.com/im/pictures/d17abb7c-beb0-4dbe-976e-fc633de18b4b.jpg?aki_policy=profile_small"
+    },
+    "totalPrice": 1190,
+    "checkin": 1760475600000,
+    "checkout": 1760648400000,
+    "guests": {
+      "adults": 2,
+      "children": 1,
+      "infants": 0
+    },
+    "stay": {
+      "_id": "622f337a75c7d36e498aaaf8",
+      "name": "Westin Kaanapali KORVN 2BR",
+      "price": 595,
+      "address": "Lahaina, HI, United States"
+    },
+    "msgs": [],
+    "status": "pending"
+  },
+  {
+    "_id": "632f3403e36c59e6164faf95",
+    "hostId": "622f3401e36c59e6164fabab",
+    "buyer": {
+      "_id": "622f3401e36c59e6164fab4d",
+      "fullname": "Edgar",
+      "imgUrl": "https://a0.muscache.com/im/pictures/d17abb7c-beb0-4dbe-976e-fc633de18b4b.jpg?aki_policy=profile_small"
+    },
+    "totalPrice": 60,
+    "checkin": 1728939600000,
+    "checkout": 1729112400000,
+    "guests": {
+      "adults": 2,
+      "children": 1,
+      "infants": 0
+    },
+    "stay": {
+      "_id": "622f337a75c7d36e498aaaf9",
+      "name": "Belle chambre à côté Metro Papineau",
+      "price": 30,
+      "address": "Montréal, QC, Canada"
+    },
+    "msgs": [],
+    "status": "pending"
+  },
+  {
+    "_id": "622f2403e36c59e6164faf96",
+    "hostId": "622f3402e36c59e6164fac46",
+    "buyer": {
+      "_id": "622f3401e36c59e6164fab4e",
+      "fullname": "Leo",
+      "imgUrl": "https://res.cloudinary.com/dvah7ijav/image/upload/v1680526538/xwyu7igl3lcqumwzyjsj.jpg"
+    },
+    "totalPrice": 279,
+    "checkin": 1694725200000,
+    "checkout": 1694984400000,
+    "guests": {
+      "adults": 2,
+      "children": 1,
+      "infants": 0
+    },
+    "stay": {
+      "_id": "622f337a75c7d36e498aaafb",
+      "name": "Fresh and modern 1BR in Bed-Stuy",
+      "price": 79,
+      "address": "Brooklyn, NY, United States"
+    },
+    "msgs": [],
+    "status": "pending"
+  },
+  {
+    "_id": "622f3413e36c59e6164faf97",
+    "hostId": "622f3407e36c59e6164fbdae",
+    "buyer": {
+      "_id": "622f3401e36c59e6164fab4f",
+      "fullname": "Margaux",
+      "imgUrl": "https://res.cloudinary.com/dvah7ijav/image/upload/v1680526538/verhjmfthx5w3ys4rm58.jpg"
+    },
+    "totalPrice": 160,
+    "checkin": 1687294800000,
+    "checkout": 1687640400000,
+    "guests": {
+      "adults": 2,
+      "children": 1,
+      "infants": 0
+    },
+    "stay": {
+      "_id": "622f337a75c7d36e498aaafc",
+      "name": "Habitación centro de Barcelona",
+      "price": 40,
+      "address": "Barcelona, Catalunya, Spain"
+    },
+    "msgs": [],
+    "status": "pending"
+  },
+  {
+    "_id": "632f3403e36c59e6164faf98",
+    "hostId": "622f3402e36c59e6164fae4d",
+    "buyer": {
+      "_id": "622f3401e36c59e6164fab50",
+      "fullname": "Francine",
+      "imgUrl": "https://res.cloudinary.com/dvah7ijav/image/upload/v1680526538/heo5y74swdy88awpyh0u.jpg"
+    },
+    "totalPrice": 840,
+    "checkin": 1689022800000,
+    "checkout": 1689714000000,
+    "guests": {
+      "adults": 2,
+      "children": 1,
+      "infants": 0
+    },
+    "stay": {
+      "_id": "622f337a75c7d36e498aab01",
+      "name": "Nice Cosy Room In Taksim",
+      "price": 105,
+      "address": "Taksim, Cihangir, Istanbul , Beyoğlu, Turkey"
+    },
+    "msgs": [],
+    "status": "pending"
+  },
+  {
+    "_id": "622f3413e36c59e6164faf99",
+    "hostId": "622f3401e36c59e6164fab52",
+    "buyer": {
+      "_id": "64294b4142c059b5040d29a1",
+      "fullname": "Erin",
+      "imgUrl": "https://res.cloudinary.com/dvah7ijav/image/upload/v1680526538/eqpw1pmf6baokrlimodg.jpg"
+    },
+    "totalPrice": 255,
+    "checkin": 1703455200000,
+    "checkout": 1703714400000,
+    "guests": {
+      "adults": 2,
+      "children": 1,
+      "infants": 0
+    },
+    "stay": {
+      "_id": "622f337a75c7d36e498aab09",
+      "name": "Spacious, Sunny Room in Park Slope",
+      "price": 85,
+      "address": "Brooklyn, NY, United States"
+    },
+    "msgs": [],
+    "status": "pending"
+  },
+  {
+    "_id": "622f3403e36c59e6165faf9a",
+    "hostId": "622f3402e36c59e6164faf2c",
+    "buyer": {
+      "_id": "622f3401e36c59e6164fab54",
+      "fullname": "Fernanda",
+      "imgUrl": "https://res.cloudinary.com/dvah7ijav/image/upload/v1680526536/satmtjrlnsmzcfe2d1pj.jpg"
+    },
+    "totalPrice": 1200,
+    "checkin": 1706133600000,
+    "checkout": 1706392800000,
+    "guests": {
+      "adults": 2,
+      "children": 1,
+      "infants": 0
+    },
+    "stay": {
+      "_id": "622f337a75c7d36e498aab08",
+      "name": "302 Kanai A Nalu Ocean front/view",
+      "price": 400,
+      "address": "Wailuku, HI, United States"
+    },
+    "msgs": [],
+    "status": "pending"
+  },
+  {
+    "_id": "622f3403e37c59e6164faf8b",
+    "hostId": "622f3402e36c59e6164facbf",
+    "buyer": {
+      "_id": "622f3401e36c59e6164fab55",
+      "fullname": "Stephanie",
+      "imgUrl": "https://res.cloudinary.com/dvah7ijav/image/upload/v1680526536/z0wj7tpkz2w2elj0uy5b.jpg"
+    },
+    "totalPrice": 1900,
+    "checkin": 1707429600000,
+    "checkout": 1708293600000,
+    "guests": {
+      "adults": 2,
+      "children": 1,
+      "infants": 0
+    },
+    "stay": {
+      "_id": "622f337a75c7d36e498aab0b",
+      "name": "Elegant Flat in the Center",
+      "price": 190,
+      "address": "Istanbul, Istanbul, Turkey"
+    },
+    "msgs": [],
+    "status": "pending"
+  },
+  {
+    "_id": "622f3413e36c59e6164faf9c",
+    "hostId": "622f3403e36c59e6164faf93",
+    "buyer": {
+      "_id": "622f3401e36c59e6164fab59",
+      "fullname": "Kyle",
+      "imgUrl": "https://res.cloudinary.com/dvah7ijav/image/upload/v1680526536/vfqumjxvkpkxrg5nqe9s.jpg"
+    },
+    "totalPrice": 7990,
+    "checkin": 1685653200000,
+    "checkout": 1686517200000,
+    "guests": {
+      "adults": 2,
+      "children": 1,
+      "infants": 0
+    },
+    "stay": {
+      "_id": "622f337a75c7d36e498aab0c",
+      "name": "Westin Kaanapali KORVS 2BR OCEAN VIEW",
+      "price": 799,
+      "address": "Lahaina, HI, United States"
+    },
+    "msgs": [],
+    "status": "pending"
+  },
+  {
+    "_id": "622f3503e36c59e6164faf9d",
+    "hostId": "622f3407e36c59e6164fbdc0",
+    "buyer": {
+      "_id": "622f3401e36c59e6164fab5d",
+      "fullname": "Arthi",
+      "imgUrl": "https://res.cloudinary.com/dvah7ijav/image/upload/v1680526536/eysvwy8vipsuep25hnww.jpg"
+    },
+    "totalPrice": 2088,
+    "checkin": 1689195600000,
+    "checkout": 1689714000000,
+    "guests": {
+      "adults": 2,
+      "children": 1,
+      "infants": 0
+    },
+    "stay": {
+      "_id": "622f337a75c7d36e498aab0d",
+      "name": "Burgazada da çarşıya yakın daire",
+      "price": 348,
+      "address": "TR, Turkey"
+    },
+    "msgs": [],
+    "status": "pending"
+  }
+]
