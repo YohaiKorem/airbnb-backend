@@ -10,7 +10,15 @@ export async function query(data) {
     const collection = await dbService.getCollection('stay')
     const stays = await collection.find(criteria).toArray()
 
-    return stays
+    const modifiedStays = stays.map((stay) => {
+      stay.loc.lng = stay.loc.coordinates[0]
+      stay.loc.lat = stay.loc.coordinates[1]
+      delete stay.loc.type
+      delete stay.loc.coordinates
+      return stay
+    })
+
+    return modifiedStays
   } catch (err) {
     loggerService.error('cannot find stays', err)
     throw err
@@ -135,12 +143,13 @@ function _buildCriteria(data: { filter: StayFilter; search: SearchParam }) {
 
 function _buildSearchCriteria(search: SearchParam) {
   const criteria = {}
-  if (search.guests && search.guests.adults) {
+  if (search.guests && +search.guests.adults) {
     let totalGuests = search.guests.adults + (search.guests.children || 0)
     criteria['capacity'] = { $gte: totalGuests }
   }
+  console.log(search.location)
 
-  if (search.location && search.location.coords) {
+  if (search.location && search.location.name && search.location.coords) {
     const distanceLimitInMeters = 5000
     criteria['loc'] = {
       $near: {

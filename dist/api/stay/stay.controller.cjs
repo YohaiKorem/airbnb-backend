@@ -15,7 +15,7 @@ async function getStays(req, res) {
         amenities,
         superhost,
     };
-    console.log(filter);
+    console.log(search);
     try {
         logger_service_cjs_1.loggerService.debug('Getting Stays');
         const stays = await stayService.query({ filter, search });

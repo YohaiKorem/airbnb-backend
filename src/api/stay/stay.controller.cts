@@ -30,7 +30,7 @@ async function getStays(req, res) {
     superhost,
   }
 
-  console.log(filter)
+  console.log(search)
 
   try {
     loggerService.debug('Getting Stays')
