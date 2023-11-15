@@ -1,6 +1,10 @@
-const dbService = require('../../services/db.service.cjs')
-const logger = require('../../services/logger.service.cjs')
-const ObjectId = require('mongodb').ObjectId
+import { Order } from '../../models/order.model.cjs'
+import { dbService } from '../../services/db.service.cjs'
+
+import { loggerService } from '../../services/logger.service.cjs'
+
+import { ObjectId } from 'mongodb'
+
 const asyncLocalStorage = require('../../services/als.service.cjs')
 
 async function query(filterBy = {}) {
@@ -68,7 +72,7 @@ async function query(filterBy = {}) {
       return order
     })
   } catch (err) {
-    logger.error('cannot find orders', err)
+    loggerService.error('cannot find orders', err)
     throw err
   }
 }
@@ -84,30 +88,37 @@ async function query(filterBy = {}) {
 //     const { deletedCount } = await collection.deleteOne(criteria)
 //     return deletedCount
 //   } catch (err) {
-//     logger.error(`cannot remove order ${orderId}`, err)
+//     loggerService.error(`cannot remove order ${orderId}`, err)
 //     throw err
 //   }
 // }
 
-async function add(order) {
+async function add(order: Order) {
   try {
-    const orderToAdd = {
-      byUserId: ObjectId(order.byUserId),
-      aboutUserId: ObjectId(order.aboutUserId),
-      txt: order.txt,
-    }
+    const orderToAdd = new Order(
+      '',
+      order.hostId,
+      order.buyer,
+      order.totalPrice,
+      order.checkin,
+      order.checkout,
+      order.guests,
+      order.stay,
+      order.msgs,
+      order.status
+    )
     const collection = await dbService.getCollection('order')
     await collection.insertOne(orderToAdd)
     return orderToAdd
   } catch (err) {
-    logger.error('cannot insert order', err)
+    loggerService.error('cannot insert order', err)
     throw err
   }
 }
 
 function _buildCriteria(filterBy) {
-  let criteria: { byUserId: string }
-  if (filterBy.byUserId) criteria.byUserId = filterBy.byUserId
+  let criteria: { hostId: string }
+  if (filterBy.hostId) criteria.hostId = filterBy.hostId
   return criteria
 }
 

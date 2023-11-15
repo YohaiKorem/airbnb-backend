@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const userService = require('./user.service.cjs');
-const logger = require('../../services/logger.service.cjs');
+const { loggerService } = require('../../services/logger.service.cjs');
 async function getUser(req, res) {
     try {
         const user = await userService.getById(req.params.id);
         res.send(user);
     }
     catch (err) {
-        logger.error('Failed to get user', err);
+        loggerService.error('Failed to get user', err);
         res.status(500).send({ err: 'Failed to get user' });
     }
 }
@@ -21,7 +21,7 @@ async function getUsers(req, res) {
         res.send(users);
     }
     catch (err) {
-        logger.error('Failed to get users', err);
+        loggerService.error('Failed to get users', err);
         res.status(500).send({ err: 'Failed to get users' });
     }
 }
@@ -31,7 +31,7 @@ async function deleteUser(req, res) {
         res.send({ msg: 'Deleted successfully' });
     }
     catch (err) {
-        logger.error('Failed to delete user', err);
+        loggerService.error('Failed to delete user', err);
         res.status(500).send({ err: 'Failed to delete user' });
     }
 }
@@ -42,7 +42,7 @@ async function updateUser(req, res) {
         res.send(savedUser);
     }
     catch (err) {
-        logger.error('Failed to update user', err);
+        loggerService.error('Failed to update user', err);
         res.status(500).send({ err: 'Failed to update user' });
     }
 }

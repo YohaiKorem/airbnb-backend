@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const { log } = require('../../middlewares/logger.middleware.cjs');
-const dbService = require('../../services/db.service.cjs');
-const logger = require('../../services/logger.service.cjs');
-const ObjectId = require('mongodb').ObjectId;
+const db_service_cjs_1 = require("../../services/db.service.cjs");
+const logger_service_cjs_1 = require("../../services/logger.service.cjs");
+const mongodb_1 = require("mongodb");
 module.exports = {
     query,
     getById,
@@ -15,11 +15,11 @@ module.exports = {
 async function query(filterBy = {}) {
     const criteria = _buildCriteria(filterBy);
     try {
-        const collection = await dbService.getCollection('user');
+        const collection = await db_service_cjs_1.dbService.getCollection('user');
         var users = await collection.find(criteria).toArray();
         users = users.map((user) => {
             delete user.password;
-            user.createdAt = new ObjectId(user._id).getTimestamp();
+            // user.createdAt = new ObjectId(user._id).getTimestamp()
             // Returning fake fresh data
             // user.createdAt = Date.now() - (1000 * 60 * 60 * 24 * 3) // 3 days ago
             return user;
@@ -27,40 +27,40 @@ async function query(filterBy = {}) {
         return users;
     }
     catch (err) {
-        logger.error('cannot find users', err);
+        logger_service_cjs_1.loggerService.error('cannot find users', err);
         throw err;
     }
 }
 async function getById(userId) {
     try {
-        const collection = await dbService.getCollection('user');
-        const user = await collection.findOne({ _id: new ObjectId(userId) });
+        const collection = await db_service_cjs_1.dbService.getCollection('user');
+        const user = await collection.findOne({ _id: new mongodb_1.ObjectId(userId) });
         delete user.password;
         return user;
     }
     catch (err) {
-        logger.error(`while finding user ${userId}`, err);
+        logger_service_cjs_1.loggerService.error(`while finding user ${userId}`, err);
         throw err;
     }
 }
 async function getByUsername(username) {
     try {
-        const collection = await dbService.getCollection('user');
+        const collection = await db_service_cjs_1.dbService.getCollection('user');
         const user = await collection.findOne({ username });
         return user;
     }
     catch (err) {
-        logger.error(`while finding user ${username}`, err);
+        logger_service_cjs_1.loggerService.error(`while finding user ${username}`, err);
         throw err;
     }
 }
 async function remove(userId) {
     try {
-        const collection = await dbService.getCollection('user');
-        await collection.deleteOne({ _id: new ObjectId(userId) });
+        const collection = await db_service_cjs_1.dbService.getCollection('user');
+        await collection.deleteOne({ _id: new mongodb_1.ObjectId(userId) });
     }
     catch (err) {
-        logger.error(`cannot remove user ${userId}`, err);
+        logger_service_cjs_1.loggerService.error(`cannot remove user ${userId}`, err);
         throw err;
     }
 }
@@ -68,18 +68,18 @@ async function update(user) {
     try {
         // peek only updatable fields!
         const userToSave = {
-            _id: new ObjectId(user._id),
+            _id: new mongodb_1.ObjectId(user._id),
             username: user.username,
             fullname: user.fullname,
             tasks: user.tasks,
             stays: user.tasks,
         };
-        const collection = await dbService.getCollection('user');
+        const collection = await db_service_cjs_1.dbService.getCollection('user');
         await collection.updateOne({ _id: userToSave._id }, { $set: userToSave });
         return userToSave;
     }
     catch (err) {
-        logger.error(`cannot update user ${user._id}`, err);
+        logger_service_cjs_1.loggerService.error(`cannot update user ${user._id}`, err);
         throw err;
     }
 }
@@ -99,12 +99,12 @@ async function add(user) {
             tasks: [],
             stays: [],
         };
-        const collection = await dbService.getCollection('user');
+        const collection = await db_service_cjs_1.dbService.getCollection('user');
         await collection.insertOne(userToAdd);
         return userToAdd;
     }
     catch (err) {
-        logger.error('cannot insert user', err);
+        logger_service_cjs_1.loggerService.error('cannot insert user', err);
         throw err;
     }
 }

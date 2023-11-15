@@ -1,4 +1,4 @@
-const logger = require('../../services/logger.service.cjs')
+import { loggerService } from '../../services/logger.service.cjs'
 const userService = require('../user/user.service.cjs')
 const authService = require('../auth/auth.service.cjs')
 const socketService = require('../../services/socket.service.cjs')
@@ -9,7 +9,7 @@ async function getOrders(req, res) {
     const orders = await orderService.query(req.query)
     res.send(orders)
   } catch (err) {
-    logger.error('Cannot get orders', err)
+    loggerService.error('Cannot get orders', err)
     res.status(500).send({ err: 'Failed to get orders' })
   }
 }
@@ -23,7 +23,7 @@ async function deleteOrder(req, res) {
       res.status(400).send({ err: 'Cannot remove order' })
     }
   } catch (err) {
-    logger.error('Failed to delete order', err)
+    loggerService.error('Failed to delete order', err)
     res.status(500).send({ err: 'Failed to delete order' })
   }
 }
@@ -74,7 +74,7 @@ async function addOrder(req, res) {
 
     res.send(order)
   } catch (err) {
-    logger.error('Failed to add order', err)
+    loggerService.error('Failed to add order', err)
     res.status(500).send({ err: 'Failed to add order' })
   }
 }

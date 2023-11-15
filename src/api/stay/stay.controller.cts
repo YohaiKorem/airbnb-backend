@@ -30,7 +30,7 @@ async function getStays(req, res) {
     superhost,
   }
 
-  console.log(search)
+  console.log(search.location)
 
   try {
     loggerService.debug('Getting Stays')
@@ -54,7 +54,7 @@ async function getStayById(req, res) {
     const stayId = req.params.id
     const stay = await stayService.getById(stayId)
     console.log(req.params, 'inside controller')
-    res.json(stay)
+    res.json(stay.location)
   } catch (err) {
     loggerService.error('Failed to get stay', err)
     res.status(500).send({ err: 'Failed to get stay' })

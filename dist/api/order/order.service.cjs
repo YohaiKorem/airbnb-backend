@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const dbService = require('../../services/db.service.cjs');
-const logger = require('../../services/logger.service.cjs');
-const ObjectId = require('mongodb').ObjectId;
+const order_model_cjs_1 = require("../../models/order.model.cjs");
+const db_service_cjs_1 = require("../../services/db.service.cjs");
+const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 const asyncLocalStorage = require('../../services/als.service.cjs');
 async function query(filterBy = {}) {
     try {
         const criteria = _buildCriteria(filterBy);
-        const collection = await dbService.getCollection('order');
+        const collection = await db_service_cjs_1.dbService.getCollection('order');
         var orders = await collection
             .aggregate([
             {
@@ -69,7 +69,7 @@ async function query(filterBy = {}) {
         });
     }
     catch (err) {
-        logger.error('cannot find orders', err);
+        logger_service_cjs_1.loggerService.error('cannot find orders', err);
         throw err;
     }
 }
@@ -84,30 +84,26 @@ async function query(filterBy = {}) {
 //     const { deletedCount } = await collection.deleteOne(criteria)
 //     return deletedCount
 //   } catch (err) {
-//     logger.error(`cannot remove order ${orderId}`, err)
+//     loggerService.error(`cannot remove order ${orderId}`, err)
 //     throw err
 //   }
 // }
 async function add(order) {
     try {
-        const orderToAdd = {
-            byUserId: ObjectId(order.byUserId),
-            aboutUserId: ObjectId(order.aboutUserId),
-            txt: order.txt,
-        };
-        const collection = await dbService.getCollection('order');
+        const orderToAdd = new order_model_cjs_1.Order('', order.hostId, order.buyer, order.totalPrice, order.checkin, order.checkout, order.guests, order.stay, order.msgs, order.status);
+        const collection = await db_service_cjs_1.dbService.getCollection('order');
         await collection.insertOne(orderToAdd);
         return orderToAdd;
     }
     catch (err) {
-        logger.error('cannot insert order', err);
+        logger_service_cjs_1.loggerService.error('cannot insert order', err);
         throw err;
     }
 }
 function _buildCriteria(filterBy) {
     let criteria;
-    if (filterBy.byUserId)
-        criteria.byUserId = filterBy.byUserId;
+    if (filterBy.hostId)
+        criteria.hostId = filterBy.hostId;
     return criteria;
 }
 module.exports = {

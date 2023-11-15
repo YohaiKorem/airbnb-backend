@@ -1,7 +1,10 @@
 const { log } = require('../../middlewares/logger.middleware.cjs')
-const dbService = require('../../services/db.service.cjs')
-const logger = require('../../services/logger.service.cjs')
-const ObjectId = require('mongodb').ObjectId
+import { dbService } from '../../services/db.service.cjs'
+
+import { loggerService } from '../../services/logger.service.cjs'
+
+import { ObjectId } from 'mongodb'
+import { User } from '../../models/user.model.cjs'
 
 module.exports = {
   query,
@@ -17,17 +20,17 @@ async function query(filterBy = {}) {
   try {
     const collection = await dbService.getCollection('user')
     var users = await collection.find(criteria).toArray()
-    users = users.map((user) => {
+    users = users.map((user: User) => {
       delete user.password
 
-      user.createdAt = new ObjectId(user._id).getTimestamp()
+      // user.createdAt = new ObjectId(user._id).getTimestamp()
       // Returning fake fresh data
       // user.createdAt = Date.now() - (1000 * 60 * 60 * 24 * 3) // 3 days ago
       return user
     })
     return users
   } catch (err) {
-    logger.error('cannot find users', err)
+    loggerService.error('cannot find users', err)
     throw err
   }
 }
@@ -39,7 +42,7 @@ async function getById(userId) {
     delete user.password
     return user
   } catch (err) {
-    logger.error(`while finding user ${userId}`, err)
+    loggerService.error(`while finding user ${userId}`, err)
     throw err
   }
 }
@@ -49,7 +52,7 @@ async function getByUsername(username) {
     const user = await collection.findOne({ username })
     return user
   } catch (err) {
-    logger.error(`while finding user ${username}`, err)
+    loggerService.error(`while finding user ${username}`, err)
     throw err
   }
 }
@@ -59,7 +62,7 @@ async function remove(userId) {
     const collection = await dbService.getCollection('user')
     await collection.deleteOne({ _id: new ObjectId(userId) })
   } catch (err) {
-    logger.error(`cannot remove user ${userId}`, err)
+    loggerService.error(`cannot remove user ${userId}`, err)
     throw err
   }
 }
@@ -78,7 +81,7 @@ async function update(user) {
     await collection.updateOne({ _id: userToSave._id }, { $set: userToSave })
     return userToSave
   } catch (err) {
-    logger.error(`cannot update user ${user._id}`, err)
+    loggerService.error(`cannot update user ${user._id}`, err)
     throw err
   }
 }
@@ -103,7 +106,7 @@ async function add(user) {
     await collection.insertOne(userToAdd)
     return userToAdd
   } catch (err) {
-    logger.error('cannot insert user', err)
+    loggerService.error('cannot insert user', err)
     throw err
   }
 }
