@@ -11,7 +11,9 @@ async function query(data) {
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('stay');
         const stays = await collection.find(criteria).toArray();
-        const modifiedStays = stays.map((stay) => _normalizeStayForFrontend(stay));
+        let modifiedStays = stays.map((stay) => _normalizeStayForFrontend(stay));
+        if (!Object.keys(criteria).length)
+            modifiedStays = modifiedStays.filter((stay, idx) => idx < 50);
         return modifiedStays;
     }
     catch (err) {
@@ -108,7 +110,6 @@ async function removeStayMsg(stayId, msgId) {
 }
 exports.removeStayMsg = removeStayMsg;
 function _normalizeStayForFrontend(stay) {
-    console.log(stay, 'stay inside noramlizeStay');
     stay.loc.lng = stay.loc.coordinates[0];
     stay.loc.lat = stay.loc.coordinates[1];
     delete stay.loc.type;

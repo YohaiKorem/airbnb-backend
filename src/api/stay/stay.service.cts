@@ -3,14 +3,15 @@ import { loggerService } from '../../services/logger.service.cjs'
 import { utilService } from '../../services/util.service.cjs'
 import { ObjectId } from 'mongodb'
 import { Stay, StayFilter, SearchParam } from '../../models/stay.model.cjs'
+
 export async function query(data) {
   const criteria = _buildCriteria(data)
 
   try {
     const collection = await dbService.getCollection('stay')
-    const stays = await collection.find(criteria).toArray()
+    const stays = await collection.find(criteria).limit(50).toArray()
 
-    const modifiedStays = stays.map((stay) => _normalizeStayForFrontend(stay))
+    let modifiedStays = stays.map((stay) => _normalizeStayForFrontend(stay))
 
     return modifiedStays
   } catch (err) {
@@ -126,8 +127,6 @@ export async function removeStayMsg(stayId, msgId) {
 }
 
 function _normalizeStayForFrontend(stay: any) {
-  console.log(stay, 'stay inside noramlizeStay')
-
   stay.loc.lng = stay.loc.coordinates[0]
   stay.loc.lat = stay.loc.coordinates[1]
   delete stay.loc.type
