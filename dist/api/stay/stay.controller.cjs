@@ -15,11 +15,9 @@ async function getStays(req, res) {
         amenities,
         superhost,
     };
-    console.log(search.location);
     try {
         logger_service_cjs_1.loggerService.debug('Getting Stays');
         const stays = await stayService.query({ filter, search });
-        console.log('stays inside stay controller after querying the stayservice', stays.length);
         res.json(stays);
     }
     catch (err) {
@@ -33,8 +31,7 @@ async function getStayById(req, res) {
     try {
         const stayId = req.params.id;
         const stay = await stayService.getById(stayId);
-        console.log(req.params, 'inside controller');
-        res.json(stay.location);
+        res.json(stay);
     }
     catch (err) {
         logger_service_cjs_1.loggerService.error('Failed to get stay', err);

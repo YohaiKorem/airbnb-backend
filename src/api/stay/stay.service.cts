@@ -10,13 +10,7 @@ export async function query(data) {
     const collection = await dbService.getCollection('stay')
     const stays = await collection.find(criteria).toArray()
 
-    const modifiedStays = stays.map((stay) => {
-      stay.loc.lng = stay.loc.coordinates[0]
-      stay.loc.lat = stay.loc.coordinates[1]
-      delete stay.loc.type
-      delete stay.loc.coordinates
-      return stay
-    })
+    const modifiedStays = stays.map((stay) => _normalizeStayForFrontend(stay))
 
     return modifiedStays
   } catch (err) {
@@ -28,8 +22,9 @@ export async function query(data) {
 export async function getById(stayId) {
   try {
     const collection = await dbService.getCollection('stay')
-    const stay = collection.findOne({ _id: new ObjectId(stayId) })
-    return stay
+    const stay = await collection.findOne({ _id: new ObjectId(stayId) })
+    const modifiedStay = _normalizeStayForFrontend(stay)
+    return modifiedStay
   } catch (err) {
     loggerService.error(`while finding stay ${stayId}`, err)
     throw err
@@ -130,6 +125,16 @@ export async function removeStayMsg(stayId, msgId) {
   }
 }
 
+function _normalizeStayForFrontend(stay: any) {
+  console.log(stay, 'stay inside noramlizeStay')
+
+  stay.loc.lng = stay.loc.coordinates[0]
+  stay.loc.lat = stay.loc.coordinates[1]
+  delete stay.loc.type
+  delete stay.loc.coordinates
+  return stay
+}
+
 function _buildCriteria(data: { filter: StayFilter; search: SearchParam }) {
   const { filter, search } = data
 
@@ -147,7 +152,6 @@ function _buildSearchCriteria(search: SearchParam) {
     let totalGuests = search.guests.adults + (search.guests.children || 0)
     criteria['capacity'] = { $gte: totalGuests }
   }
-  console.log(search.location)
 
   if (search.location && search.location.name && search.location.coords) {
     const distanceLimitInMeters = 5000

@@ -11,13 +11,7 @@ async function query(data) {
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('stay');
         const stays = await collection.find(criteria).toArray();
-        const modifiedStays = stays.map((stay) => {
-            stay.loc.lng = stay.loc.coordinates[0];
-            stay.loc.lat = stay.loc.coordinates[1];
-            delete stay.loc.type;
-            delete stay.loc.coordinates;
-            return stay;
-        });
+        const modifiedStays = stays.map((stay) => _normalizeStayForFrontend(stay));
         return modifiedStays;
     }
     catch (err) {
@@ -29,8 +23,9 @@ exports.query = query;
 async function getById(stayId) {
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('stay');
-        const stay = collection.findOne({ _id: new mongodb_1.ObjectId(stayId) });
-        return stay;
+        const stay = await collection.findOne({ _id: new mongodb_1.ObjectId(stayId) });
+        const modifiedStay = _normalizeStayForFrontend(stay);
+        return modifiedStay;
     }
     catch (err) {
         logger_service_cjs_1.loggerService.error(`while finding stay ${stayId}`, err);
@@ -112,6 +107,14 @@ async function removeStayMsg(stayId, msgId) {
     }
 }
 exports.removeStayMsg = removeStayMsg;
+function _normalizeStayForFrontend(stay) {
+    console.log(stay, 'stay inside noramlizeStay');
+    stay.loc.lng = stay.loc.coordinates[0];
+    stay.loc.lat = stay.loc.coordinates[1];
+    delete stay.loc.type;
+    delete stay.loc.coordinates;
+    return stay;
+}
 function _buildCriteria(data) {
     const { filter, search } = data;
     const filterCriteria = _buildFilterCriteria(filter);
@@ -127,7 +130,6 @@ function _buildSearchCriteria(search) {
         let totalGuests = search.guests.adults + (search.guests.children || 0);
         criteria['capacity'] = { $gte: totalGuests };
     }
-    console.log(search.location);
     if (search.location && search.location.name && search.location.coords) {
         const distanceLimitInMeters = 5000;
         criteria['loc'] = {
