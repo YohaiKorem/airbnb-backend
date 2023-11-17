@@ -8,12 +8,16 @@ const mongodb_1 = require("mongodb");
 const stay_model_cjs_1 = require("../../models/stay.model.cjs");
 async function query(data) {
     const criteria = _buildCriteria(data);
+    const { pagination } = data;
+    console.log(pagination);
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('stay');
-        const stays = await collection.find(criteria).toArray();
+        const stays = await collection
+            .find(criteria)
+            .skip(pagination.pageIdx * pagination.pageSize)
+            .limit(pagination.pageSize)
+            .toArray();
         let modifiedStays = stays.map((stay) => _normalizeStayForFrontend(stay));
-        if (!Object.keys(criteria).length)
-            modifiedStays = modifiedStays.filter((stay, idx) => idx < 50);
         return modifiedStays;
     }
     catch (err) {
@@ -110,6 +114,7 @@ async function removeStayMsg(stayId, msgId) {
 }
 exports.removeStayMsg = removeStayMsg;
 function _normalizeStayForFrontend(stay) {
+    stay = { ...stay };
     stay.loc.lng = stay.loc.coordinates[0];
     stay.loc.lat = stay.loc.coordinates[1];
     delete stay.loc.type;

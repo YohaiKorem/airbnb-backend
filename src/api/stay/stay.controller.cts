@@ -1,7 +1,11 @@
 const stayService = require('./stay.service.cjs')
 
 import { loggerService } from '../../services/logger.service.cjs'
-import { SearchParam, StayFilter } from '../../models/stay.model.cjs'
+import {
+  Pagination,
+  SearchParam,
+  StayFilter,
+} from '../../models/stay.model.cjs'
 async function getStays(req, res) {
   let {
     startDate,
@@ -16,6 +20,8 @@ async function getStays(req, res) {
     roomType,
     labels,
     amenities,
+    pageIdx,
+    pageSize,
   } = _parseQuery(req.query)
 
   const search: SearchParam = { startDate, endDate, location, guests }
@@ -29,11 +35,14 @@ async function getStays(req, res) {
     amenities,
     superhost,
   }
-
+  const pagination: Pagination = {
+    pageIdx,
+    pageSize,
+  }
   try {
     loggerService.debug('Getting Stays')
 
-    const stays = await stayService.query({ filter, search })
+    const stays = await stayService.query({ filter, search, pagination })
 
     res.json(stays)
   } catch (err) {

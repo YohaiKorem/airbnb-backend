@@ -6,10 +6,15 @@ import { Stay, StayFilter, SearchParam } from '../../models/stay.model.cjs'
 
 export async function query(data) {
   const criteria = _buildCriteria(data)
-
+  const { pagination } = data
+  console.log(pagination)
   try {
     const collection = await dbService.getCollection('stay')
-    const stays = await collection.find(criteria).limit(50).toArray()
+    const stays = await collection
+      .find(criteria)
+      .skip(pagination.pageIdx * pagination.pageSize)
+      .limit(pagination.pageSize)
+      .toArray()
 
     let modifiedStays = stays.map((stay) => _normalizeStayForFrontend(stay))
 
@@ -127,6 +132,7 @@ export async function removeStayMsg(stayId, msgId) {
 }
 
 function _normalizeStayForFrontend(stay: any) {
+  stay = { ...stay }
   stay.loc.lng = stay.loc.coordinates[0]
   stay.loc.lat = stay.loc.coordinates[1]
   delete stay.loc.type
