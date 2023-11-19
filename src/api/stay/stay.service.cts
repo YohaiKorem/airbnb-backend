@@ -3,6 +3,7 @@ import { loggerService } from '../../services/logger.service.cjs'
 import { utilService } from '../../services/util.service.cjs'
 import { ObjectId } from 'mongodb'
 import { Stay, StayFilter, SearchParam } from '../../models/stay.model.cjs'
+import { User } from '../../models/user.model.cjs'
 
 export async function query(data) {
   const criteria = _buildCriteria(data)
@@ -220,7 +221,7 @@ function _buildFilterCriteria(filter: StayFilter) {
   return criteria
 }
 
-// export async function initData(entity) {
+// export async function initData() {
 //   const entities = require(`../../../src/data/${entity}.json`)
 //   // Convert string _id to ObjectId and update loc field
 //   const entitiesWithObjectId = entities.map((entity) => {
@@ -250,7 +251,6 @@ function _buildFilterCriteria(filter: StayFilter) {
 //     await collection.insertMany(entitiesWithObjectId)
 //     console.log('Inserted entities with ObjectId')
 
-//     // Create a 2dsphere index on the loc field
 //     await collection.createIndex({ loc: '2dsphere' })
 //     console.log('2dsphere index created on loc field')
 //   } catch (err) {
@@ -267,5 +267,4 @@ module.exports = {
   updateStayMsg,
   addStayMsg,
   removeStayMsg,
-  // initData,
 }

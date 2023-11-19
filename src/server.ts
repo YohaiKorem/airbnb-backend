@@ -45,7 +45,8 @@ if (process.env.NODE_ENV === 'production') {
 
 // for initiating data
 // import stayService from './api/stay/stay.service.cjs'
-// stayService.initData('stay')
+// import userService from './api/user/user.service.cjs'
+// userService.initUserData()
 
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)
