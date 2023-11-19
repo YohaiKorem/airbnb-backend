@@ -6,17 +6,17 @@ class User {
     imgUrl;
     password;
     username;
-    _id;
     wishlists;
     isOwner;
-    constructor(fullname, imgUrl, password, username, _id, wishlists, isOwner) {
+    _id;
+    constructor(fullname, imgUrl, password, username, wishlists, isOwner, _id) {
         this.fullname = fullname;
         this.imgUrl = imgUrl;
         this.password = password;
         this.username = username;
-        this._id = _id;
         this.wishlists = wishlists;
         this.isOwner = isOwner;
+        this._id = _id;
     }
 }
 exports.User = User;

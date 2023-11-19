@@ -5,8 +5,8 @@ export class User {
     public imgUrl: string,
     public password: string,
     public username: string,
-    public _id: string,
     public wishlists: Wishlist[],
-    public isOwner: boolean
+    public isOwner: boolean,
+    public _id?: string
   ) {}
 }

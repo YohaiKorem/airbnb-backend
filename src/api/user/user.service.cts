@@ -94,15 +94,15 @@ async function add(user) {
     if (existUser) throw new Error('Username taken')
 
     // peek only updatable fields!
-    const userToAdd = {
-      username: user.username,
-      password: user.password,
-      fullname: user.fullname,
-      imgUrl: user.imgUrl,
-      isAdmin: false,
-      tasks: [],
-      stays: [],
-    }
+    const userToAdd = new User(
+      user.fullname,
+      user.imgUrl,
+      user.password,
+      user.username,
+      [],
+      false
+    )
+
     const collection = await dbService.getCollection('user')
     await collection.insertOne(userToAdd)
     return userToAdd

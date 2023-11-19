@@ -5,6 +5,7 @@ const { log } = require('../../middlewares/logger.middleware.cjs');
 const db_service_cjs_1 = require("../../services/db.service.cjs");
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 const mongodb_1 = require("mongodb");
+const user_model_cjs_1 = require("../../models/user.model.cjs");
 module.exports = {
     query,
     getById,
@@ -92,15 +93,7 @@ async function add(user) {
         if (existUser)
             throw new Error('Username taken');
         // peek only updatable fields!
-        const userToAdd = {
-            username: user.username,
-            password: user.password,
-            fullname: user.fullname,
-            imgUrl: user.imgUrl,
-            isAdmin: false,
-            tasks: [],
-            stays: [],
-        };
+        const userToAdd = new user_model_cjs_1.User(user.fullname, user.imgUrl, user.password, user.username, [], false);
         const collection = await db_service_cjs_1.dbService.getCollection('user');
         await collection.insertOne(userToAdd);
         return userToAdd;
