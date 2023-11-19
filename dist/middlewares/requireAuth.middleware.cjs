@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const logger = require('../services/logger.service.cjs');
+const loggerService = require('../services/logger.service.cjs');
 const authService = require('../api/auth/auth.service.cjs');
 const config = require('../config/index.cjs');
 async function requireAuth(req, res, next) {
@@ -25,7 +25,7 @@ async function requireAdmin(req, res, next) {
         return res.status(401).send('Not Authenticated');
     const loggedinUser = authService.validateToken(req.cookies.loginToken);
     if (!loggedinUser.isAdmin) {
-        logger.warn(loggedinUser.fullname + 'attempted to perform admin action');
+        loggerService.warn(loggedinUser.fullname + 'attempted to perform admin action');
         res.status(403).end('Not Authorized');
         return;
     }
