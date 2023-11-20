@@ -91,7 +91,7 @@ async function add(user) {
         // Validate that there are no such user:
         const existUser = await getByUsername(user.username);
         if (existUser)
-            throw new Error('Username taken');
+            throw new Error('invalid username or password');
         // peek only updatable fields!
         const userToAdd = new user_model_cjs_1.User(user.fullname, user.imgUrl, user.password, user.username, [], false);
         const collection = await db_service_cjs_1.dbService.getCollection('user');

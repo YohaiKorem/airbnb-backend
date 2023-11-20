@@ -92,6 +92,16 @@ export async function update(stay) {
   }
 }
 
+export async function getAllHostStaysById(hostId: string) {
+  try {
+    const collection = await dbService.getCollection('stay')
+    const stays = await collection.find({ 'host._id': hostId }).toArray()
+    return stays
+  } catch (err) {
+    loggerService.error('cannot find stays for host', err)
+  }
+}
+
 export async function updateStayMsg(msg, stayId) {
   try {
     await removeStayMsg(stayId, msg.id)
@@ -264,6 +274,7 @@ module.exports = {
   getById,
   add,
   update,
+  getAllHostStaysById,
   updateStayMsg,
   addStayMsg,
   removeStayMsg,

@@ -21,7 +21,11 @@ async function getStays(req, res) {
     };
     try {
         logger_service_cjs_1.loggerService.debug('Getting Stays');
-        const stays = await stayService.query({ filter, search, pagination });
+        const stays = await stayService.query({
+            filter,
+            search,
+            pagination,
+        });
         res.json(stays);
     }
     catch (err) {
@@ -40,6 +44,19 @@ async function getStayById(req, res) {
     catch (err) {
         logger_service_cjs_1.loggerService.error('Failed to get stay', err);
         res.status(500).send({ err: 'Failed to get stay' });
+    }
+}
+async function getAllHostStaysById(req, res) {
+    const hostId = req.params.id;
+    try {
+        const stays = await stayService.getAllHostStaysById(hostId);
+        res.json(stays);
+    }
+    catch (err) {
+        logger_service_cjs_1.loggerService.error('Failed to get stays', err);
+        res
+            .status(500)
+            .send({ err: `Failed to get stays for host with id ${hostId}` });
     }
 }
 async function getStayMsgs(req, res) {
@@ -150,5 +167,6 @@ module.exports = {
     addStayMsg,
     removeStayMsg,
     updateStayMsg,
+    getAllHostStaysById,
 };
 //# sourceMappingURL=stay.controller.cjs.map

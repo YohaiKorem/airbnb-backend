@@ -14,6 +14,7 @@ const {
   addStayMsg,
   removeStayMsg,
   updateStayMsg,
+  getAllHostStaysById,
 } = require('./stay.controller.cjs')
 const router = express.Router()
 
@@ -22,6 +23,7 @@ const router = express.Router()
 
 router.get('/', log, getStays)
 router.get('/:id', getStayById)
+router.get('/host/stays/:id', getAllHostStaysById)
 router.post('/', addStay)
 router.put('/:id', updateStay)
 router.delete('/:id', removeStay)

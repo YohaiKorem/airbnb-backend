@@ -91,7 +91,7 @@ async function add(user) {
   try {
     // Validate that there are no such user:
     const existUser = await getByUsername(user.username)
-    if (existUser) throw new Error('Username taken')
+    if (existUser) throw new Error('invalid username or password')
 
     // peek only updatable fields!
     const userToAdd = new User(

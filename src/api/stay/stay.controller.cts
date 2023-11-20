@@ -4,6 +4,7 @@ import { loggerService } from '../../services/logger.service.cjs'
 import {
   Pagination,
   SearchParam,
+  Stay,
   StayFilter,
 } from '../../models/stay.model.cjs'
 async function getStays(req, res) {
@@ -42,7 +43,11 @@ async function getStays(req, res) {
   try {
     loggerService.debug('Getting Stays')
 
-    const stays = await stayService.query({ filter, search, pagination })
+    const stays: Stay[] = await stayService.query({
+      filter,
+      search,
+      pagination,
+    })
 
     res.json(stays)
   } catch (err) {
@@ -55,12 +60,25 @@ async function getStays(req, res) {
 
 async function getStayById(req, res) {
   try {
-    const stayId = req.params.id
-    const stay = await stayService.getById(stayId)
+    const stayId: string = req.params.id
+    const stay: Stay = await stayService.getById(stayId)
     res.json(stay)
   } catch (err) {
     loggerService.error('Failed to get stay', err)
     res.status(500).send({ err: 'Failed to get stay' })
+  }
+}
+
+async function getAllHostStaysById(req, res) {
+  const hostId: string = req.params.id
+  try {
+    const stays: Stay[] = await stayService.getAllHostStaysById(hostId)
+    res.json(stays)
+  } catch (err) {
+    loggerService.error('Failed to get stays', err)
+    res
+      .status(500)
+      .send({ err: `Failed to get stays for host with id ${hostId}` })
   }
 }
 
@@ -172,4 +190,5 @@ module.exports = {
   addStayMsg,
   removeStayMsg,
   updateStayMsg,
+  getAllHostStaysById,
 }

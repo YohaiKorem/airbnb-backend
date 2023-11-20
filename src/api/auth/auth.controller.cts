@@ -35,9 +35,10 @@ async function signup(req, res) {
     res.cookie('loginToken', loginToken)
 
     res.json(user)
-  } catch (err) {
-    loggerService.error('Failed to signup ' + err)
-    res.status(500).send({ err: 'Failed to signup' })
+  } catch ({ name, message }) {
+    loggerService.error('Failed to signup ' + name)
+    console.log(name)
+    res.status(500).send({ name: 'Failed to signup', msg: message })
   }
 }
 

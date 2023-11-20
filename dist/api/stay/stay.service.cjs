@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeStayMsg = exports.addStayMsg = exports.updateStayMsg = exports.update = exports.add = exports.remove = exports.getById = exports.query = void 0;
+exports.removeStayMsg = exports.addStayMsg = exports.updateStayMsg = exports.getAllHostStaysById = exports.update = exports.add = exports.remove = exports.getById = exports.query = void 0;
 const db_service_cjs_1 = require("../../services/db.service.cjs");
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 const util_service_cjs_1 = require("../../services/util.service.cjs");
@@ -75,6 +75,17 @@ async function update(stay) {
     }
 }
 exports.update = update;
+async function getAllHostStaysById(hostId) {
+    try {
+        const collection = await db_service_cjs_1.dbService.getCollection('stay');
+        const stays = await collection.find({ 'host._id': hostId }).toArray();
+        return stays;
+    }
+    catch (err) {
+        logger_service_cjs_1.loggerService.error('cannot find stays for host', err);
+    }
+}
+exports.getAllHostStaysById = getAllHostStaysById;
 async function updateStayMsg(msg, stayId) {
     try {
         await removeStayMsg(stayId, msg.id);
@@ -229,6 +240,7 @@ module.exports = {
     getById,
     add,
     update,
+    getAllHostStaysById,
     updateStayMsg,
     addStayMsg,
     removeStayMsg,
