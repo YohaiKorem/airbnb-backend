@@ -49,32 +49,37 @@ export async function remove(stayId): Promise<void> {
   }
 }
 
-export async function add(stay): Promise<Stay> {
+export async function add(stay: Stay): Promise<Stay> {
   try {
     const collection = await dbService.getCollection('stay')
-
-    const result = await collection.insertOne(stay)
+    const noramlizedStay = _normalizeStayForBackend(stay)
+    noramlizedStay._id = new ObjectId()
+    const result = await collection.insertOne(noramlizedStay)
     if (!result.acknowledged || !result.insertedId)
       throw new Error('Insertion failed')
     const savedStay: Stay = await collection.findOne({ _id: result.insertedId })
-    return savedStay
+    const normalizedSavedStay = _normalizeStayForFrontend(savedStay)
+    return normalizedSavedStay
   } catch (err) {
     loggerService.error('cannot insert stay', err)
     throw err
   }
 }
 
-export async function update(stay): Promise<Stay> {
+export async function update(stay: Stay): Promise<Stay> {
   try {
     const collection = await dbService.getCollection('stay')
-    const { _id, ...updateData } = stay
+
+    const noramlizedStayForBackend = _normalizeStayForBackend(stay)
+    const { _id, ...updateData } = noramlizedStayForBackend
+
     await collection.updateOne({ _id: new ObjectId(_id) }, { $set: updateData })
     const updatedStay: Stay = await collection.findOne({
       _id: new ObjectId(_id),
     })
     if (!updatedStay) throw new Error('Stay not found')
-
-    return updatedStay
+    const noramlizedStayForFrontend = _normalizeStayForFrontend(updatedStay)
+    return noramlizedStayForFrontend
   } catch (err) {
     loggerService.error(`cannot update stay ${stay._id}`, err)
     throw err
@@ -152,6 +157,20 @@ function _normalizeStayForFrontend(stay: any) {
   delete stay.loc.type
   delete stay.loc.coordinates
   return stay
+}
+
+function _normalizeStayForBackend(stay: Stay) {
+  var newLoc = {
+    type: 'Point',
+    coordinates: [stay.loc.lng, stay.loc.lat],
+    country: stay.loc.country,
+    countryCode: stay.loc.countryCode,
+    city: stay.loc.city,
+    address: stay.loc.address,
+  }
+  const newStay: any = { ...stay }
+  newStay.loc = newLoc
+  return newStay
 }
 
 function _buildCriteria(data: { filter: StayFilter; search: SearchParam }) {
