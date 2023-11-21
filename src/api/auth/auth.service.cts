@@ -6,7 +6,7 @@ import { loggerService } from '../../services/logger.service.cjs'
 
 const cryptr = new Cryptr(process.env.SECRET1 || 'Secret-Puk-1234')
 
-async function login(username, password) {
+export async function login(username, password) {
   console.log('username of login:', username)
   console.log('password of login:', password)
   loggerService.debug(`auth.service - login with username: ${username}`)
@@ -22,7 +22,7 @@ async function login(username, password) {
   return user
 }
 
-async function signup(username, password, fullname, imgUrl = null) {
+export async function signup(username, password, fullname, imgUrl = null) {
   const saltRounds = 10
   console.log('username', username)
 
@@ -36,7 +36,7 @@ async function signup(username, password, fullname, imgUrl = null) {
   return userService.add({ username, password: hash, fullname, imgUrl })
 }
 
-function getLoginToken(user) {
+export function getLoginToken(user) {
   const userInfo = {
     _id: user._id,
     fullname: user.fullname,
@@ -45,7 +45,7 @@ function getLoginToken(user) {
   return cryptr.encrypt(JSON.stringify(userInfo))
 }
 
-function validateToken(loginToken) {
+export function validateToken(loginToken) {
   try {
     const json = cryptr.decrypt(loginToken)
     const loggedinUser = JSON.parse(json)

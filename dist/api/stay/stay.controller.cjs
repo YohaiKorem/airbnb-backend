@@ -59,6 +59,17 @@ async function getAllHostStaysById(req, res) {
             .send({ err: `Failed to get stays for host with id ${hostId}` });
     }
 }
+async function getHostById(req, res) {
+    const hostId = req.params.id;
+    try {
+        const host = await stayService.getHostById(hostId);
+        res.json(host);
+    }
+    catch (err) {
+        logger_service_cjs_1.loggerService.error('Failed to get host', err);
+        res.status(500).send({ err: `Failed to get host with id ${hostId}` });
+    }
+}
 async function getStayMsgs(req, res) {
     console.log(req);
 }
@@ -168,5 +179,6 @@ module.exports = {
     removeStayMsg,
     updateStayMsg,
     getAllHostStaysById,
+    getHostById,
 };
 //# sourceMappingURL=stay.controller.cjs.map

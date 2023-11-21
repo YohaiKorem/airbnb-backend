@@ -7,6 +7,7 @@ import {
   Stay,
   StayFilter,
 } from '../../models/stay.model.cjs'
+import { StayHost } from '../../models/host.model.cjs'
 async function getStays(req, res) {
   let {
     startDate,
@@ -79,6 +80,16 @@ async function getAllHostStaysById(req, res) {
     res
       .status(500)
       .send({ err: `Failed to get stays for host with id ${hostId}` })
+  }
+}
+async function getHostById(req, res) {
+  const hostId: string = req.params.id
+  try {
+    const host: StayHost | null = await stayService.getHostById(hostId)
+    res.json(host)
+  } catch (err) {
+    loggerService.error('Failed to get host', err)
+    res.status(500).send({ err: `Failed to get host with id ${hostId}` })
   }
 }
 
@@ -191,4 +202,5 @@ module.exports = {
   removeStayMsg,
   updateStayMsg,
   getAllHostStaysById,
+  getHostById,
 }

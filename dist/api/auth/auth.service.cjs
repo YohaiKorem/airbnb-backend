@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.validateToken = exports.getLoginToken = exports.signup = exports.login = void 0;
 const Cryptr = require('cryptr');
 const bcrypt = require('bcrypt');
 const userService = require('../user/user.service.cjs');
@@ -19,6 +20,7 @@ async function login(username, password) {
     delete user.password;
     return user;
 }
+exports.login = login;
 async function signup(username, password, fullname, imgUrl = null) {
     const saltRounds = 10;
     console.log('username', username);
@@ -28,6 +30,7 @@ async function signup(username, password, fullname, imgUrl = null) {
     const hash = await bcrypt.hash(password, saltRounds);
     return userService.add({ username, password: hash, fullname, imgUrl });
 }
+exports.signup = signup;
 function getLoginToken(user) {
     const userInfo = {
         _id: user._id,
@@ -36,6 +39,7 @@ function getLoginToken(user) {
     };
     return cryptr.encrypt(JSON.stringify(userInfo));
 }
+exports.getLoginToken = getLoginToken;
 function validateToken(loginToken) {
     try {
         const json = cryptr.decrypt(loginToken);
@@ -47,6 +51,7 @@ function validateToken(loginToken) {
     }
     return null;
 }
+exports.validateToken = validateToken;
 module.exports = {
     signup,
     login,

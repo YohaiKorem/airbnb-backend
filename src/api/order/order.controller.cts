@@ -1,3 +1,4 @@
+import { Order } from '../../models/order.model.cjs'
 import { loggerService } from '../../services/logger.service.cjs'
 const userService = require('../user/user.service.cjs')
 const authService = require('../auth/auth.service.cjs')
@@ -5,12 +6,29 @@ const socketService = require('../../services/socket.service.cjs')
 const orderService = require('./order.service.cjs')
 
 async function getOrders(req, res) {
+  const { id } = req.params
   try {
-    const orders = await orderService.query(req.query)
+    let entityType: string
+    if (req.path.includes('/host/')) entityType = 'host'
+    else if (req.path.includes('/buyer/')) entityType = 'buyer'
+    else entityType = 'all'
+    console.log('id inside order controller', id)
+
+    const orders: Order[] = await orderService.query(id, entityType)
     res.send(orders)
   } catch (err) {
     loggerService.error('Cannot get orders', err)
     res.status(500).send({ err: 'Failed to get orders' })
+  }
+}
+async function getOrderById(req, res) {
+  const { id } = req.params
+  try {
+    const order: Order = await orderService.getById(id)
+    res.json(order)
+  } catch (err) {
+    loggerService.error('Cannot get order', err)
+    res.status(500).send({ err: `Failed to get order with id of ${id}` })
   }
 }
 
@@ -83,4 +101,5 @@ module.exports = {
   getOrders,
   deleteOrder,
   addOrder,
+  getOrderById,
 }

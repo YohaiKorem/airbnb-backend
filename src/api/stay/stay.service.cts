@@ -4,8 +4,9 @@ import { utilService } from '../../services/util.service.cjs'
 import { ObjectId } from 'mongodb'
 import { Stay, StayFilter, SearchParam } from '../../models/stay.model.cjs'
 import { User } from '../../models/user.model.cjs'
+import { StayHost } from '../../models/host.model.cjs'
 
-export async function query(data) {
+export async function query(data): Promise<Stay[]> {
   const criteria = _buildCriteria(data)
   const { pagination } = data
   console.log(pagination)
@@ -26,7 +27,7 @@ export async function query(data) {
   }
 }
 
-export async function getById(stayId) {
+export async function getById(stayId): Promise<Stay> {
   try {
     const collection = await dbService.getCollection('stay')
     const stay = await collection.findOne({ _id: new ObjectId(stayId) })
@@ -38,7 +39,7 @@ export async function getById(stayId) {
   }
 }
 
-export async function remove(stayId) {
+export async function remove(stayId): Promise<void> {
   try {
     const collection = await dbService.getCollection('stay')
     await collection.deleteOne({ _id: new ObjectId(stayId) })
@@ -48,57 +49,59 @@ export async function remove(stayId) {
   }
 }
 
-export async function add(stay) {
+export async function add(stay): Promise<Stay> {
   try {
     const collection = await dbService.getCollection('stay')
-    await collection.insertOne(stay)
-    return stay
+
+    const result = await collection.insertOne(stay)
+    if (!result.acknowledged || !result.insertedId)
+      throw new Error('Insertion failed')
+    const savedStay: Stay = await collection.findOne({ _id: result.insertedId })
+    return savedStay
   } catch (err) {
     loggerService.error('cannot insert stay', err)
     throw err
   }
 }
 
-export async function update(stay) {
+export async function update(stay): Promise<Stay> {
   try {
-    const stayToSave = new Stay(
-      stay._id,
-      stay.name,
-      stay.type,
-      stay.imgUrls,
-      stay.price,
-      stay.summary,
-      stay.capacity,
-      stay.amenities,
-      stay.roomType,
-      stay.host,
-      stay.loc,
-      stay.reviews,
-      stay.likedByUsers,
-      stay.labels,
-      stay.equipment,
-      stay.rate
-    )
-
     const collection = await dbService.getCollection('stay')
-    await collection.updateOne(
-      { _id: new ObjectId(stay._id) },
-      { $set: stayToSave }
-    )
-    return stay
+    const { _id, ...updateData } = stay
+    await collection.updateOne({ _id: new ObjectId(_id) }, { $set: updateData })
+    const updatedStay: Stay = await collection.findOne({
+      _id: new ObjectId(_id),
+    })
+    if (!updatedStay) throw new Error('Stay not found')
+
+    return updatedStay
   } catch (err) {
     loggerService.error(`cannot update stay ${stay._id}`, err)
     throw err
   }
 }
 
-export async function getAllHostStaysById(hostId: string) {
+async function getHostById(hostId: string): Promise<StayHost | null> {
   try {
     const collection = await dbService.getCollection('stay')
-    const stays = await collection.find({ 'host._id': hostId }).toArray()
+    const stay: Stay = await collection.findOne({ 'host._id': hostId })
+    return stay ? stay.host : null
+  } catch (err) {
+    loggerService.error('cannot find host', err)
+    throw err
+  }
+}
+
+export async function getAllHostStaysById(hostId: string): Promise<Stay[]> {
+  try {
+    const collection = await dbService.getCollection('stay')
+    const stays: Stay[] = await collection
+      .find({ 'host._id': hostId })
+      .toArray()
     return stays
   } catch (err) {
     loggerService.error('cannot find stays for host', err)
+    throw err
   }
 }
 
@@ -275,6 +278,7 @@ module.exports = {
   add,
   update,
   getAllHostStaysById,
+  getHostById,
   updateStayMsg,
   addStayMsg,
   removeStayMsg,

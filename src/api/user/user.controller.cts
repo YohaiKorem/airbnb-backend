@@ -1,3 +1,5 @@
+import { User } from '../../models/user.model.cjs'
+
 const userService = require('./user.service.cjs')
 const { loggerService } = require('../../services/logger.service.cjs')
 
@@ -37,7 +39,7 @@ async function deleteUser(req, res) {
 async function updateUser(req, res) {
   try {
     const user = req.body
-    const savedUser = await userService.update(user)
+    const savedUser: User = await userService.update(user)
     res.send(savedUser)
   } catch (err) {
     loggerService.error('Failed to update user', err)

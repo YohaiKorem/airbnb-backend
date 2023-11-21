@@ -5,7 +5,6 @@ const db_service_cjs_1 = require("../../services/db.service.cjs");
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 const util_service_cjs_1 = require("../../services/util.service.cjs");
 const mongodb_1 = require("mongodb");
-const stay_model_cjs_1 = require("../../models/stay.model.cjs");
 async function query(data) {
     const criteria = _buildCriteria(data);
     const { pagination } = data;
@@ -53,8 +52,11 @@ exports.remove = remove;
 async function add(stay) {
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('stay');
-        await collection.insertOne(stay);
-        return stay;
+        const result = await collection.insertOne(stay);
+        if (!result.acknowledged || !result.insertedId)
+            throw new Error('Insertion failed');
+        const savedStay = await collection.findOne({ _id: result.insertedId });
+        return savedStay;
     }
     catch (err) {
         logger_service_cjs_1.loggerService.error('cannot insert stay', err);
@@ -64,10 +66,15 @@ async function add(stay) {
 exports.add = add;
 async function update(stay) {
     try {
-        const stayToSave = new stay_model_cjs_1.Stay(stay._id, stay.name, stay.type, stay.imgUrls, stay.price, stay.summary, stay.capacity, stay.amenities, stay.roomType, stay.host, stay.loc, stay.reviews, stay.likedByUsers, stay.labels, stay.equipment, stay.rate);
         const collection = await db_service_cjs_1.dbService.getCollection('stay');
-        await collection.updateOne({ _id: new mongodb_1.ObjectId(stay._id) }, { $set: stayToSave });
-        return stay;
+        const { _id, ...updateData } = stay;
+        await collection.updateOne({ _id: new mongodb_1.ObjectId(_id) }, { $set: updateData });
+        const updatedStay = await collection.findOne({
+            _id: new mongodb_1.ObjectId(_id),
+        });
+        if (!updatedStay)
+            throw new Error('Stay not found');
+        return updatedStay;
     }
     catch (err) {
         logger_service_cjs_1.loggerService.error(`cannot update stay ${stay._id}`, err);
@@ -75,14 +82,28 @@ async function update(stay) {
     }
 }
 exports.update = update;
+async function getHostById(hostId) {
+    try {
+        const collection = await db_service_cjs_1.dbService.getCollection('stay');
+        const stay = await collection.findOne({ 'host._id': hostId });
+        return stay ? stay.host : null;
+    }
+    catch (err) {
+        logger_service_cjs_1.loggerService.error('cannot find host', err);
+        throw err;
+    }
+}
 async function getAllHostStaysById(hostId) {
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('stay');
-        const stays = await collection.find({ 'host._id': hostId }).toArray();
+        const stays = await collection
+            .find({ 'host._id': hostId })
+            .toArray();
         return stays;
     }
     catch (err) {
         logger_service_cjs_1.loggerService.error('cannot find stays for host', err);
+        throw err;
     }
 }
 exports.getAllHostStaysById = getAllHostStaysById;
@@ -241,6 +262,7 @@ module.exports = {
     add,
     update,
     getAllHostStaysById,
+    getHostById,
     updateStayMsg,
     addStayMsg,
     removeStayMsg,
