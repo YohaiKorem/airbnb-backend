@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const order_model_cjs_1 = require("../../models/order.model.cjs");
 const db_service_cjs_1 = require("../../services/db.service.cjs");
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 const mongodb_1 = require("mongodb");
@@ -103,6 +102,22 @@ async function getById(id) {
         throw err;
     }
 }
+async function update(order) {
+    try {
+        const collection = await db_service_cjs_1.dbService.getCollection('order');
+        const { _id, ...updateData } = order;
+        await collection.updateOne({ _id: new mongodb_1.ObjectId(_id) }, { $set: updateData });
+        const updatedOrder = await collection.findOne({
+            _id: new mongodb_1.ObjectId(_id),
+        });
+        if (!updatedOrder)
+            throw new Error('Order not found');
+    }
+    catch (err) {
+        logger_service_cjs_1.loggerService.error(`cannot update order ${order._id}`, err);
+        throw err;
+    }
+}
 // async function remove(orderId) {
 //   try {
 //     const store = asyncLocalStorage.getStore()
@@ -120,10 +135,16 @@ async function getById(id) {
 // }
 async function add(order) {
     try {
-        const orderToAdd = new order_model_cjs_1.Order('', order.hostId, order.buyer, order.totalPrice, order.checkin, order.checkout, order.guests, order.stay, order.msgs, order.status);
         const collection = await db_service_cjs_1.dbService.getCollection('order');
-        await collection.insertOne(orderToAdd);
-        return orderToAdd;
+        const newOrder = { ...order };
+        newOrder._id = new mongodb_1.ObjectId();
+        const result = await collection.insertOne(newOrder);
+        if (!result.acknowledged || !result.insertedId)
+            throw new Error('Insertion failed');
+        const savedOrder = await collection.findOne({
+            _id: result.insertedId,
+        });
+        return savedOrder;
     }
     catch (err) {
         logger_service_cjs_1.loggerService.error('cannot insert order', err);
@@ -140,6 +161,7 @@ module.exports = {
     query,
     // remove,
     add,
+    update,
     getById,
 };
 //# sourceMappingURL=order.service.cjs.map

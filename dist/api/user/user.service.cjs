@@ -67,6 +67,7 @@ async function remove(userId) {
     }
 }
 async function update(user) {
+    console.log('inside updateUser service', user);
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('user');
         await collection.updateOne({ _id: user._id }, { $set: user });

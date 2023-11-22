@@ -50,46 +50,65 @@ async function deleteOrder(req, res) {
         res.status(500).send({ err: 'Failed to delete order' });
     }
 }
-async function updateOrder(orderId) { }
-async function addOrder(req, res) {
-    var { loggedinUser } = req;
+async function updateOrder(req, res) {
     try {
-        var order = req.body;
-        order.byUserId = loggedinUser._id;
-        order = await orderService.add(order);
-        // prepare the updated order for sending out
-        order.aboutUser = await userService.getById(order.aboutUserId);
-        loggedinUser.score += 10;
-        loggedinUser = await userService.update(loggedinUser);
-        order.byUser = loggedinUser;
-        // User info is saved also in the login-token, update it
-        const loginToken = authService.getLoginToken(loggedinUser);
-        res.cookie('loginToken', loginToken);
-        delete order.aboutUserId;
-        delete order.byUserId;
-        socketService.broadcast({
-            type: 'order-added',
-            data: order,
-            userId: loggedinUser._id,
-        });
-        socketService.emitToUser({
-            type: 'order-about-you',
-            data: order,
-            userId: order.aboutUser._id,
-        });
-        const fullUser = await userService.getById(loggedinUser._id);
-        socketService.emitTo({
-            type: 'user-updated',
-            data: fullUser,
-            label: fullUser._id,
-        });
-        res.send(order);
+        const order = req.body;
+        const updatedOrder = await orderService.update(order);
+        return res.json(updatedOrder);
+    }
+    catch (err) {
+        logger_service_cjs_1.loggerService.error('Failed to update order', err);
+        res.status(500).send({ err: 'Failed to update order' });
+    }
+}
+async function addOrder(req, res) {
+    try {
+        const order = req.body;
+        const addedOrder = await orderService.add(order);
+        res.json(addedOrder);
     }
     catch (err) {
         logger_service_cjs_1.loggerService.error('Failed to add order', err);
         res.status(500).send({ err: 'Failed to add order' });
     }
 }
+// async function addOrder(req, res) {
+//   var { loggedinUser } = req
+//   try {
+//     var order = req.body
+//     order.byUserId = loggedinUser._id
+//     order = await orderService.add(order)
+//     // prepare the updated order for sending out
+//     order.aboutUser = await userService.getById(order.aboutUserId)
+//     loggedinUser = await userService.update(loggedinUser)
+//     order.byUser = loggedinUser
+//     // User info is saved also in the login-token, update it
+//     const loginToken = authService.getLoginToken(loggedinUser)
+//     res.cookie('loginToken', loginToken)
+//     delete order.aboutUserId
+//     delete order.byUserId
+//     socketService.broadcast({
+//       type: 'order-added',
+//       data: order,
+//       userId: loggedinUser._id,
+//     })
+//     socketService.emitToUser({
+//       type: 'order-about-you',
+//       data: order,
+//       userId: order.aboutUser._id,
+//     })
+//     const fullUser = await userService.getById(loggedinUser._id)
+//     socketService.emitTo({
+//       type: 'user-updated',
+//       data: fullUser,
+//       label: fullUser._id,
+//     })
+//     res.send(order)
+//   } catch (err) {
+//     loggerService.error('Failed to add order', err)
+//     res.status(500).send({ err: 'Failed to add order' })
+//   }
+// }
 module.exports = {
     getOrders,
     deleteOrder,

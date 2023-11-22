@@ -109,6 +109,22 @@ async function getById(id: string) {
   }
 }
 
+async function update(order: Order) {
+  try {
+    const collection = await dbService.getCollection('order')
+    const { _id, ...updateData } = order
+
+    await collection.updateOne({ _id: new ObjectId(_id) }, { $set: updateData })
+    const updatedOrder: Order = await collection.findOne({
+      _id: new ObjectId(_id),
+    })
+    if (!updatedOrder) throw new Error('Order not found')
+  } catch (err) {
+    loggerService.error(`cannot update order ${order._id}`, err)
+    throw err
+  }
+}
+
 // async function remove(orderId) {
 //   try {
 //     const store = asyncLocalStorage.getStore()
@@ -127,21 +143,17 @@ async function getById(id: string) {
 
 async function add(order: Order) {
   try {
-    const orderToAdd = new Order(
-      '',
-      order.hostId,
-      order.buyer,
-      order.totalPrice,
-      order.checkin,
-      order.checkout,
-      order.guests,
-      order.stay,
-      order.msgs,
-      order.status
-    )
     const collection = await dbService.getCollection('order')
-    await collection.insertOne(orderToAdd)
-    return orderToAdd
+    const newOrder: any = { ...order }
+    newOrder._id = new ObjectId()
+    const result = await collection.insertOne(newOrder)
+    if (!result.acknowledged || !result.insertedId)
+      throw new Error('Insertion failed')
+    const savedOrder: Order = await collection.findOne({
+      _id: result.insertedId,
+    })
+
+    return savedOrder
   } catch (err) {
     loggerService.error('cannot insert order', err)
     throw err
@@ -158,5 +170,6 @@ module.exports = {
   query,
   // remove,
   add,
+  update,
   getById,
 }

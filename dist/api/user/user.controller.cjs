@@ -39,6 +39,7 @@ async function deleteUser(req, res) {
 async function updateUser(req, res) {
     try {
         const user = req.body;
+        console.log('user inside updateUser controller', user);
         const savedUser = await userService.update(user);
         const loginToken = authService.getLoginToken(savedUser);
         res.cookie('loginToken', loginToken);

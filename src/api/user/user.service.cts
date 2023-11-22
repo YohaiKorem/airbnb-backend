@@ -69,6 +69,8 @@ async function remove(userId) {
 }
 
 async function update(user: User): Promise<User> {
+  console.log('inside updateUser service', user)
+
   try {
     const collection = await dbService.getCollection('user')
     await collection.updateOne({ _id: user._id }, { $set: user })
