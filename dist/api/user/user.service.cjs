@@ -36,7 +36,7 @@ async function query(filterBy = {}) {
 async function getById(userId) {
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('user');
-        const user = await collection.findOne({ _id: new mongodb_1.ObjectId(userId) });
+        const user = await collection.findOne({ _id: userId });
         delete user.password;
         return user;
     }
