@@ -6,6 +6,7 @@ const {
 const { log } = require('../../middlewares/logger.middleware.cjs')
 const {
   addOrder,
+  updateOrder,
   getOrders,
   deleteOrder,
   getOrderById,
@@ -20,6 +21,7 @@ router.get('/orders/:id', log, getOrders)
 router.get('/orders/host/:id', log, getOrders)
 router.get('/orders/buyer/:id', log, getOrders)
 router.post('/', log, requireAuth, addOrder)
+router.put('/:id', log, requireAuth, updateOrder)
 router.delete('/:id', requireAuth, deleteOrder)
 
 module.exports = router

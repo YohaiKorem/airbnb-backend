@@ -50,6 +50,7 @@ async function deleteOrder(req, res) {
         res.status(500).send({ err: 'Failed to delete order' });
     }
 }
+async function updateOrder(orderId) { }
 async function addOrder(req, res) {
     var { loggedinUser } = req;
     try {
@@ -58,9 +59,6 @@ async function addOrder(req, res) {
         order = await orderService.add(order);
         // prepare the updated order for sending out
         order.aboutUser = await userService.getById(order.aboutUserId);
-        // Give the user credit for adding a order
-        // var user = await userService.getById(order.byUserId)
-        // user.score += 10
         loggedinUser.score += 10;
         loggedinUser = await userService.update(loggedinUser);
         order.byUser = loggedinUser;
@@ -97,5 +95,6 @@ module.exports = {
     deleteOrder,
     addOrder,
     getOrderById,
+    updateOrder,
 };
 //# sourceMappingURL=order.controller.cjs.map

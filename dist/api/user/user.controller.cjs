@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const authService = require('../auth/auth.service.cjs');
 const userService = require('./user.service.cjs');
 const { loggerService } = require('../../services/logger.service.cjs');
 async function getUser(req, res) {
@@ -39,6 +40,8 @@ async function updateUser(req, res) {
     try {
         const user = req.body;
         const savedUser = await userService.update(user);
+        const loginToken = authService.getLoginToken(savedUser);
+        res.cookie('loginToken', loginToken);
         res.send(savedUser);
     }
     catch (err) {

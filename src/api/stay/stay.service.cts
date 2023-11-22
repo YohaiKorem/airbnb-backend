@@ -27,7 +27,7 @@ export async function query(data): Promise<Stay[]> {
   }
 }
 
-export async function getById(stayId): Promise<Stay> {
+export async function getById(stayId: string): Promise<Stay> {
   try {
     const collection = await dbService.getCollection('stay')
     const stay = await collection.findOne({ _id: new ObjectId(stayId) })
@@ -39,7 +39,7 @@ export async function getById(stayId): Promise<Stay> {
   }
 }
 
-export async function remove(stayId): Promise<void> {
+export async function remove(stayId: string): Promise<void> {
   try {
     const collection = await dbService.getCollection('stay')
     await collection.deleteOne({ _id: new ObjectId(stayId) })

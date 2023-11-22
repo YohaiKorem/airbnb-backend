@@ -46,6 +46,8 @@ async function deleteOrder(req, res) {
   }
 }
 
+async function updateOrder(orderId: string) {}
+
 async function addOrder(req, res) {
   var { loggedinUser } = req
 
@@ -57,9 +59,6 @@ async function addOrder(req, res) {
     // prepare the updated order for sending out
     order.aboutUser = await userService.getById(order.aboutUserId)
 
-    // Give the user credit for adding a order
-    // var user = await userService.getById(order.byUserId)
-    // user.score += 10
     loggedinUser.score += 10
 
     loggedinUser = await userService.update(loggedinUser)
@@ -102,4 +101,5 @@ module.exports = {
   deleteOrder,
   addOrder,
   getOrderById,
+  updateOrder,
 }

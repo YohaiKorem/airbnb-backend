@@ -1,4 +1,5 @@
 import { User } from '../../models/user.model.cjs'
+const authService = require('../auth/auth.service.cjs')
 
 const userService = require('./user.service.cjs')
 const { loggerService } = require('../../services/logger.service.cjs')
@@ -40,6 +41,9 @@ async function updateUser(req, res) {
   try {
     const user = req.body
     const savedUser: User = await userService.update(user)
+    const loginToken = authService.getLoginToken(savedUser)
+    res.cookie('loginToken', loginToken)
+
     res.send(savedUser)
   } catch (err) {
     loggerService.error('Failed to update user', err)
