@@ -43,9 +43,17 @@ async function logout(req, res) {
         res.status(500).send({ err: 'Failed to logout' });
     }
 }
+async function socialLogin(req, res) { }
+async function socialSignup(req, res) {
+    const { id } = req.body;
+    console.log(req.body);
+    console.log(id);
+}
 module.exports = {
     login,
     signup,
     logout,
+    socialLogin,
+    socialSignup,
 };
 //# sourceMappingURL=auth.controller.cjs.map
