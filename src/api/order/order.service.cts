@@ -119,6 +119,7 @@ async function update(order: Order) {
       _id: new ObjectId(_id),
     })
     if (!updatedOrder) throw new Error('Order not found')
+    return updatedOrder
   } catch (err) {
     loggerService.error(`cannot update order ${order._id}`, err)
     throw err

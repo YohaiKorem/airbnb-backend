@@ -112,6 +112,7 @@ async function update(order) {
         });
         if (!updatedOrder)
             throw new Error('Order not found');
+        return updatedOrder;
     }
     catch (err) {
         logger_service_cjs_1.loggerService.error(`cannot update order ${order._id}`, err);

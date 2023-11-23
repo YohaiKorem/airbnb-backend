@@ -12,7 +12,7 @@ router.get('/orders/:id', log, getOrders);
 router.get('/orders/host/:id', log, getOrders);
 router.get('/orders/buyer/:id', log, getOrders);
 router.post('/', log, requireAuth, addOrder);
-router.put('/:id', log, requireAuth, updateOrder);
+router.put('/:id', log, updateOrder);
 router.delete('/:id', requireAuth, deleteOrder);
 module.exports = router;
 //# sourceMappingURL=order.routes.cjs.map
