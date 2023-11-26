@@ -1,4 +1,5 @@
 import express from 'express';
+import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
@@ -11,6 +12,8 @@ import stayRoutes from './api/stay/stay.routes.cjs';
 import orderRoutes from './api/order/order.routes.cjs';
 import { socketService } from './services/socket.service.cjs';
 import { loggerService } from './services/logger.service.cjs';
+import { initializePassport, sessionPassport, } from './services/passport.service.cjs';
+import config from './config/index.cjs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const app = express();
@@ -19,6 +22,14 @@ const http = createServer(app);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.static('public'));
+app.use(session({
+    secret: process.env.SESSION_SECRET || config['secretKey'],
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: process.env.NODE_ENV === 'production' },
+}));
+app.use(initializePassport());
+app.use(sessionPassport());
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.resolve(__dirname, 'public')));
 }

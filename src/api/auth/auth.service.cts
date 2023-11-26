@@ -1,5 +1,5 @@
 const Cryptr = require('cryptr')
-
+import { User } from '../../models/user.model.cjs'
 const bcrypt = require('bcrypt')
 const userService = require('../user/user.service.cjs')
 import { loggerService } from '../../services/logger.service.cjs'
@@ -45,6 +45,14 @@ export function getLoginToken(user) {
   return cryptr.encrypt(JSON.stringify(userInfo))
 }
 
+async function authFacebook(accessToken, refreshToken, profile, cb) {
+  try {
+    const user = await userService.getById(profile.id)
+    if (!user) console.log('adding new facebook user to DB')
+    const newUser = User.fromFacebook(profile)
+  } catch (error) {}
+}
+
 export function validateToken(loginToken) {
   try {
     const json = cryptr.decrypt(loginToken)
@@ -61,4 +69,5 @@ module.exports = {
   login,
   getLoginToken,
   validateToken,
+  authFacebook,
 }

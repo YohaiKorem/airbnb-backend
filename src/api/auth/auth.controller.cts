@@ -1,4 +1,9 @@
+const axios = require('axios')
 const authService = require('./auth.service.cjs')
+const userService = require('../user/user.service.cjs')
+const FacebookStrategy = require('passport-facebook').strategy
+const passport = require('passport')
+import config from '../../config/index.cjs'
 import { loggerService } from '../../services/logger.service.cjs'
 
 async function login(req, res) {
@@ -51,12 +56,49 @@ async function logout(req, res) {
   }
 }
 
-async function socialLogin(req, res) {}
-
-async function socialSignup(req, res) {
-  const { id } = req.body
+async function socialLogin(req, res) {
+  const { provider } = req.body
   console.log(req.body)
-  console.log(id)
+  console.log(provider)
+}
+
+async function authenticateFacebook(accessToken, refreshToken, profile, cb) {
+  const user = await userService.getById(profile.id)
+  if (!user) console.log('adding new facebook user to DB')
+}
+
+async function verifyToken(req, res) {
+  const {
+    authToken,
+    email,
+    firstName,
+    id,
+    lastName,
+    name,
+    photoUrl,
+    provider,
+    response,
+  } = req.query
+  const appAccessToken = config['FACEBOOK_CLIENT_ID'] // You get this from your Facebook App settings
+
+  const url = `https://graph.facebook.com/debug_token?input_token=${JSON.stringify(
+    authToken
+  )}&access_token=${appAccessToken}`
+  console.log('url', url)
+
+  try {
+    const response = await axios.get(url)
+    console.log(response.data)
+
+    return response.data // This contains the verification result
+  } catch (err) {
+    // Handle errors here (invalid token, network issues, etc.)
+    res.status(500).send({ name: 'Failed to verify user', msg: err })
+  }
+}
+
+async function errCallback(req, res) {
+  console.log('err redirect')
 }
 
 module.exports = {
@@ -64,5 +106,7 @@ module.exports = {
   signup,
   logout,
   socialLogin,
-  socialSignup,
+  errCallback,
+  authenticateFacebook,
+  verifyToken,
 }

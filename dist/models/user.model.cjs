@@ -4,19 +4,25 @@ exports.User = void 0;
 class User {
     fullname;
     imgUrl;
-    password;
     username;
     wishlists;
     isOwner;
+    password;
     _id;
-    constructor(fullname, imgUrl, password, username, wishlists, isOwner, _id) {
+    constructor(fullname, imgUrl, username, wishlists, isOwner, password, _id) {
         this.fullname = fullname;
         this.imgUrl = imgUrl;
-        this.password = password;
         this.username = username;
         this.wishlists = wishlists;
         this.isOwner = isOwner;
+        this.password = password;
         this._id = _id;
+    }
+    static fromFacebook(facebookUser) {
+        return new User(facebookUser.name, facebookUser.response.picture.data.url, facebookUser.firstName, [], false, facebookUser.authToken, facebookUser.id);
+    }
+    static fromGoogle(googleUser) {
+        return new User(googleUser.name, googleUser.photoUrl, googleUser.firstName, [], false, googleUser.idToken, googleUser.id);
     }
 }
 exports.User = User;

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateToken = exports.getLoginToken = exports.signup = exports.login = void 0;
 const Cryptr = require('cryptr');
+const user_model_cjs_1 = require("../../models/user.model.cjs");
 const bcrypt = require('bcrypt');
 const userService = require('../user/user.service.cjs');
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
@@ -40,6 +41,15 @@ function getLoginToken(user) {
     return cryptr.encrypt(JSON.stringify(userInfo));
 }
 exports.getLoginToken = getLoginToken;
+async function authFacebook(accessToken, refreshToken, profile, cb) {
+    try {
+        const user = await userService.getById(profile.id);
+        if (!user)
+            console.log('adding new facebook user to DB');
+        const newUser = user_model_cjs_1.User.fromFacebook(profile);
+    }
+    catch (error) { }
+}
 function validateToken(loginToken) {
     try {
         const json = cryptr.decrypt(loginToken);
@@ -57,5 +67,6 @@ module.exports = {
     login,
     getLoginToken,
     validateToken,
+    authFacebook,
 };
 //# sourceMappingURL=auth.service.cjs.map

@@ -89,7 +89,7 @@ async function add(user) {
         if (existUser)
             throw new Error('invalid username or password');
         // peek only updatable fields!
-        const userToAdd = new user_model_cjs_1.User(user.fullname, user.imgUrl, user.password, user.username, [], false);
+        const userToAdd = new user_model_cjs_1.User(user.fullname, user.imgUrl, user.username, [], false, user.password);
         const collection = await db_service_cjs_1.dbService.getCollection('user');
         await collection.insertOne(userToAdd);
         return userToAdd;

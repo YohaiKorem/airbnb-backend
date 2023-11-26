@@ -10,4 +10,5 @@ else {
 }
 config.isGuestMode = true;
 module.exports = config;
+exports.default = config;
 //# sourceMappingURL=index.cjs.map

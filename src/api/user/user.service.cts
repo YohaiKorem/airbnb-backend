@@ -94,10 +94,10 @@ async function add(user) {
     const userToAdd = new User(
       user.fullname,
       user.imgUrl,
-      user.password,
       user.username,
       [],
-      false
+      false,
+      user.password
     )
 
     const collection = await dbService.getCollection('user')
