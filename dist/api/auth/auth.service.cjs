@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.validateToken = exports.getLoginToken = exports.signup = exports.login = void 0;
 const Cryptr = require('cryptr');
-const user_model_cjs_1 = require("../../models/user.model.cjs");
 const bcrypt = require('bcrypt');
 const userService = require('../user/user.service.cjs');
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
@@ -42,18 +41,14 @@ function getLoginToken(user) {
 }
 exports.getLoginToken = getLoginToken;
 async function signupFromFacebook(facebookUser) {
-    const newUser = user_model_cjs_1.User.fromFacebook(facebookUser);
-    console.log('newUser from facebook', newUser);
-    const user = await signup(newUser.username, newUser.password, newUser.fullname, newUser.imgUrl);
+    facebookUser.response = JSON.parse(facebookUser.response);
+    const user = await userService.addFromSocial(facebookUser);
+    console.log(user);
     return user;
 }
-// async function authFacebook(accessToken, refreshToken, profile, cb) {
-//   try {
-//     const user = await userService.getById(profile.id)
-//     if (!user) console.log('adding new facebook user to DB')
-//     const newUser = User.fromFacebook(profile)
-//   } catch (error) {}
-// }
+async function signupFromGoogle(googleUser) {
+    return await userService.addFromSocial(googleUser);
+}
 function validateToken(loginToken) {
     try {
         const json = cryptr.decrypt(loginToken);

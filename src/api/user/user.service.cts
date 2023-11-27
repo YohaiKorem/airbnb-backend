@@ -13,6 +13,8 @@ module.exports = {
   remove,
   update,
   add,
+  addFromSocial,
+  getBySocialId,
   // initUserData,
 }
 
@@ -54,6 +56,22 @@ async function getById(userId, isSocial: boolean = false) {
     else return null
   }
 }
+async function getBySocialId(userId) {
+  console.log('userId', userId)
+
+  try {
+    const collection = await dbService.getCollection('user')
+    const user = await collection.findOne({ id: userId })
+    if (!user) return null
+
+    delete user.password
+    return user
+  } catch (err) {
+    loggerService.error(`while finding user ${userId}`, err)
+    return null
+  }
+}
+
 async function getByUsername(username) {
   try {
     const collection = await dbService.getCollection('user')
@@ -93,11 +111,9 @@ async function update(user: User): Promise<User> {
 
 async function add(user) {
   try {
-    // Validate that there are no such user:
     const existUser = await getByUsername(user.username)
     if (existUser) throw new Error('invalid username or password')
 
-    // peek only updatable fields!
     const userToAdd = new User(
       user.fullname,
       user.imgUrl,
@@ -110,6 +126,40 @@ async function add(user) {
     const collection = await dbService.getCollection('user')
     await collection.insertOne(userToAdd)
     return userToAdd
+  } catch (err) {
+    loggerService.error('cannot insert user', err)
+    throw err
+  }
+}
+async function addFromSocial(socialUser) {
+  try {
+    const newUser =
+      socialUser.provider === 'FACEBOOK'
+        ? {
+            fullname: socialUser.name,
+            // the image is hashed by facebook
+            imgUrl: '',
+            username: socialUser.firstName,
+            wishlists: [],
+            isOwner: false,
+            password: socialUser.authToken,
+            id: socialUser.id,
+          }
+        : {
+            fullname: socialUser.name,
+            imgUrl: socialUser.photoUrl,
+            username: socialUser.firstName,
+            wishlists: [],
+            isOwner: false,
+            password: socialUser.idToken,
+            id: socialUser.id,
+          }
+
+    console.log(newUser)
+
+    const collection = await dbService.getCollection('user')
+    await collection.insertOne(newUser)
+    return newUser
   } catch (err) {
     loggerService.error('cannot insert user', err)
     throw err

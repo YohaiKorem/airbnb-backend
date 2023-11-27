@@ -1,4 +1,5 @@
 const Cryptr = require('cryptr')
+import { ObjectId } from 'mongodb'
 import { User } from '../../models/user.model.cjs'
 const bcrypt = require('bcrypt')
 const userService = require('../user/user.service.cjs')
@@ -46,24 +47,16 @@ export function getLoginToken(user) {
 }
 
 async function signupFromFacebook(facebookUser) {
-  const newUser = User.fromFacebook(facebookUser)
-  console.log('newUser from facebook', newUser)
+  facebookUser.response = JSON.parse(facebookUser.response)
 
-  const user = await signup(
-    newUser.username,
-    newUser.password,
-    newUser.fullname,
-    newUser.imgUrl
-  )
+  const user = await userService.addFromSocial(facebookUser)
+
   return user
 }
-// async function authFacebook(accessToken, refreshToken, profile, cb) {
-//   try {
-//     const user = await userService.getById(profile.id)
-//     if (!user) console.log('adding new facebook user to DB')
-//     const newUser = User.fromFacebook(profile)
-//   } catch (error) {}
-// }
+
+async function signupFromGoogle(googleUser) {
+  return await userService.addFromSocial(googleUser)
+}
 
 export function validateToken(loginToken) {
   try {
@@ -82,4 +75,5 @@ module.exports = {
   getLoginToken,
   validateToken,
   signupFromFacebook,
+  signupFromGoogle,
 }

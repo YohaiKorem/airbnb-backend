@@ -71,17 +71,25 @@ async function socialSignIn(responseData, req, res) {
     console.log('user', name);
     let user;
     try {
-        user = await userService.getById(id, true);
-    }
-    catch (err) {
-        console.log('failed to get user by id', err);
-        user = await signupFromFacebook(req, res);
-    }
-    finally {
+        user = await userService.getBySocialId(id);
+        if (!user)
+            user = await signupFromFacebook(req, res);
+        if (!user)
+            throw new Error('Failed to create user from Facebook data');
+        const response = JSON.parse(req.query.response);
+        // user.imgUrl = req.query.photoUrl
+        user.imgUrl = response.picture.data.url;
+        console.log(user);
         const loginToken = authService.getLoginToken(user);
         logger_service_cjs_1.loggerService.info('User login: ', user);
         res.cookie('loginToken', loginToken);
         res.json(user);
+    }
+    catch (err) {
+        console.log('Error in socialSignIn:', err);
+        res
+            .status(500)
+            .send({ error: 'Failed to process social sign-in', message: err.message });
     }
 }
 async function signupFromFacebook(req, res) {

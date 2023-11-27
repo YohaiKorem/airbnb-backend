@@ -78,10 +78,14 @@ async function socialSignIn(responseData, req, res) {
   console.log('user', name)
   let user
   try {
-    user = await userService.getById(id, true)
+    user = await userService.getBySocialId(id)
     if (!user) user = await signupFromFacebook(req, res)
     if (!user) throw new Error('Failed to create user from Facebook data')
+    const response = JSON.parse(req.query.response)
+    // user.imgUrl = req.query.photoUrl
 
+    user.imgUrl = response.picture.data.url
+    console.log(user)
     const loginToken = authService.getLoginToken(user)
     loggerService.info('User login: ', user)
     res.cookie('loginToken', loginToken)
