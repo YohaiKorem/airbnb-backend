@@ -64,30 +64,15 @@ async function authenticateFacebook(accessToken, refreshToken, profile, cb) {
 async function verifyToken(req, res) {
     const { authToken, email, firstName, id, lastName, name, photoUrl, provider, response, } = req.query;
     const appAccessToken = index_cjs_1.default['FACEBOOK_CLIENT_ID']; // You get this from your Facebook App settings
-    const url = `https://graph.facebook.com/debug_token?input_token=${'EAAJJt8433ZBkBO2GtT0aZByBsjVsmVQXJjGq8HLcPUE2Y7wZChxma4AS4SyYkFXmKJLrGnUACZClBT3cdutjHDVwpEO3dN8rwEHfIjHt8Ej9f2urdsEUMZCh9sJn0ZAXayTY4ZAZCHWZA8ReBa0g9aUPscB6Ikup7cLI1qJcSUlpFbuXbYV98CGzlR6YGFWvb4XwJMeZBdIwgm67F82jORe0gkWj4GZAmPOpWMSZCJZB3xFZBVmEo7ewFGiEoRmbZAfs2MXpa4ZD'}&access_token=${appAccessToken}`;
+    const url = `https://graph.facebook.com/debug_token?input_token=${JSON.stringify(authToken)}&access_token=${appAccessToken}`;
     console.log('url', url);
     try {
         const response = await axios.get(url);
-        console.log('response.data', response.data);
+        console.log(response.data);
         return response.data; // This contains the verification result
     }
     catch (err) {
-        console.log('Error message:', err.message);
-        if (err.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            console.log('Error response data:', err.response.data);
-            console.log('Error response status:', err.response.status);
-            console.log('Error response headers:', err.response.headers);
-        }
-        else if (err.request) {
-            // The request was made but no response was received
-            console.log('Error request:', err.request);
-        }
-        else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', err.message);
-        }
+        // Handle errors here (invalid token, network issues, etc.)
         res.status(500).send({ name: 'Failed to verify user', msg: err });
     }
 }
