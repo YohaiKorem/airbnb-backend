@@ -1,13 +1,4 @@
 node_modules
 logs
-src/config
-src/config/index.cts
-src/config/dev.cts
-src/config/prod.cts
-dist/config
-dist/config/index.cjs
-dist/config/index.cjs.map
-dist/config/dev.cjs
-dist/config/dev.cjs.map
-dist/config/prod.cjs
-dist/config/prod.cjs.map
+.env
+.gitignore
