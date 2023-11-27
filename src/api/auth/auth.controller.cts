@@ -5,7 +5,8 @@ const FacebookStrategy = require('passport-facebook').strategy
 const passport = require('passport')
 import config from '../../config/index.cjs'
 import { loggerService } from '../../services/logger.service.cjs'
-
+import dotenv from 'dotenv'
+dotenv.config()
 async function login(req, res) {
   const { username, password } = req.body
 
@@ -56,44 +57,50 @@ async function logout(req, res) {
   }
 }
 
-async function socialLogin(req, res) {
-  const { provider } = req.body
-  console.log(req.body)
-  console.log(provider)
-}
-
-async function authenticateFacebook(accessToken, refreshToken, profile, cb) {
-  const user = await userService.getById(profile.id)
-  if (!user) console.log('adding new facebook user to DB')
-}
-
 async function verifyToken(req, res) {
-  const {
-    authToken,
-    email,
-    firstName,
-    id,
-    lastName,
-    name,
-    photoUrl,
-    provider,
-    response,
-  } = req.query
-  const appAccessToken = config['FACEBOOK_CLIENT_ID'] // You get this from your Facebook App settings
+  const { authToken } = req.query
 
-  const url = `https://graph.facebook.com/debug_token?input_token=${JSON.stringify(
-    authToken
-  )}&access_token=${appAccessToken}`
-  console.log('url', url)
+  const url = `https://graph.facebook.com/me?fields=id,name&access_token=${authToken}`
 
   try {
     const response = await axios.get(url)
-    console.log(response.data)
-
-    return response.data // This contains the verification result
+    if (response && response.data) socialSignIn(response.data, req, res)
   } catch (err) {
     // Handle errors here (invalid token, network issues, etc.)
+    console.log(err, 'had an error')
+
     res.status(500).send({ name: 'Failed to verify user', msg: err })
+  }
+}
+
+async function socialSignIn(responseData, req, res) {
+  const { id, name } = responseData
+  console.log('user', name)
+  let user
+  try {
+    user = await userService.getById(id, true)
+    if (!user) user = await signupFromFacebook(req, res)
+    if (!user) throw new Error('Failed to create user from Facebook data')
+
+    const loginToken = authService.getLoginToken(user)
+    loggerService.info('User login: ', user)
+    res.cookie('loginToken', loginToken)
+    res.json(user)
+  } catch (err) {
+    console.log('Error in socialSignIn:', err)
+    res
+      .status(500)
+      .send({ error: 'Failed to process social sign-in', message: err.message })
+  }
+}
+
+async function signupFromFacebook(req, res) {
+  try {
+    const user = await authService.signupFromFacebook(req.query)
+    return user
+  } catch ({ name, message }) {
+    loggerService.error('Failed to signup with facebook ' + name)
+    res.status(500).send({ name: 'Failed to signup', msg: message })
   }
 }
 
@@ -105,8 +112,6 @@ module.exports = {
   login,
   signup,
   logout,
-  socialLogin,
   errCallback,
-  authenticateFacebook,
   verifyToken,
 }

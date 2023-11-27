@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb'
 import { Buyer } from './buyer.model.cjs'
 import { Msg } from './msg.model.cjs'
 import { SearchParam, Stay } from './stay.model.cjs'
@@ -5,8 +6,8 @@ import { User } from './user.model.cjs'
 
 export class Order {
   constructor(
-    public _id: string,
-    public hostId: string,
+    public _id: string | ObjectId,
+    public hostId: string | ObjectId,
     public buyer: Buyer,
     public totalPrice: number,
     public checkin: number,

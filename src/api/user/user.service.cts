@@ -36,15 +36,22 @@ async function query(filterBy = {}) {
   }
 }
 
-async function getById(userId) {
+async function getById(userId, isSocial: boolean = false) {
+  console.log('userId', userId)
+
   try {
     const collection = await dbService.getCollection('user')
     const user = await collection.findOne({ _id: userId })
+    if (!user) {
+      if (isSocial) return null
+      throw new Error('User not found')
+    }
     delete user.password
     return user
   } catch (err) {
     loggerService.error(`while finding user ${userId}`, err)
-    throw err
+    if (!isSocial) throw err
+    else return null
   }
 }
 async function getByUsername(username) {

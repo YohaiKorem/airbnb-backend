@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongodb'
 import { Wishlist } from './wishlist.model.cjs'
 export class User {
   constructor(
@@ -7,7 +8,7 @@ export class User {
     public wishlists: Wishlist[],
     public isOwner: boolean,
     public password?: string,
-    public _id?: string
+    public _id?: string | ObjectId
   ) {}
   public static fromFacebook(facebookUser): User {
     return new User(
@@ -17,7 +18,7 @@ export class User {
       [],
       false,
       facebookUser.authToken,
-      facebookUser.id
+      new ObjectId(facebookUser.id)
     )
   }
   public static fromGoogle(googleUser): User {

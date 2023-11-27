@@ -1,3 +1,5 @@
+import dotenv from 'dotenv'
+dotenv.config()
 import { User } from '../models/user.model.cjs'
 import config from '../config/index.cjs'
 const passport = require('passport')
@@ -7,8 +9,8 @@ const userService = require('../api/user/user.service.cjs') // Adjust path as ne
 passport.use(
   new FacebookStrategy(
     {
-      clientID: config.FACEBOOK_CLIENT_ID,
-      clientSecret: config.FACEBOOK_CLIENT_SECRET,
+      clientID: process.env.FACEBOOK_CLIENT_ID,
+      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
       callbackURL: 'http://localhost:3030/api/auth/facebook/callback',
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -19,9 +21,9 @@ passport.use(
         if (!user) {
           user = User.fromFacebook(profile)
         }
-        done(null, user)
+        return await done(null, user)
       } catch (err) {
-        done(err, null)
+        return await done(err, null)
       }
     }
   )

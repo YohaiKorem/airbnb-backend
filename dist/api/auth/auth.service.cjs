@@ -41,15 +41,19 @@ function getLoginToken(user) {
     return cryptr.encrypt(JSON.stringify(userInfo));
 }
 exports.getLoginToken = getLoginToken;
-async function authFacebook(accessToken, refreshToken, profile, cb) {
-    try {
-        const user = await userService.getById(profile.id);
-        if (!user)
-            console.log('adding new facebook user to DB');
-        const newUser = user_model_cjs_1.User.fromFacebook(profile);
-    }
-    catch (error) { }
+async function signupFromFacebook(facebookUser) {
+    const newUser = user_model_cjs_1.User.fromFacebook(facebookUser);
+    console.log('newUser from facebook', newUser);
+    const user = await signup(newUser.username, newUser.password, newUser.fullname, newUser.imgUrl);
+    return user;
 }
+// async function authFacebook(accessToken, refreshToken, profile, cb) {
+//   try {
+//     const user = await userService.getById(profile.id)
+//     if (!user) console.log('adding new facebook user to DB')
+//     const newUser = User.fromFacebook(profile)
+//   } catch (error) {}
+// }
 function validateToken(loginToken) {
     try {
         const json = cryptr.decrypt(loginToken);
@@ -67,6 +71,6 @@ module.exports = {
     login,
     getLoginToken,
     validateToken,
-    authFacebook,
+    signupFromFacebook,
 };
 //# sourceMappingURL=auth.service.cjs.map

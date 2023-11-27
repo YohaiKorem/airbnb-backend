@@ -4,14 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.sessionPassport = exports.initializePassport = void 0;
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const user_model_cjs_1 = require("../models/user.model.cjs");
-const index_cjs_1 = __importDefault(require("../config/index.cjs"));
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook').Strategy;
 const userService = require('../api/user/user.service.cjs'); // Adjust path as needed
 passport.use(new FacebookStrategy({
-    clientID: index_cjs_1.default.FACEBOOK_CLIENT_ID,
-    clientSecret: index_cjs_1.default.FACEBOOK_CLIENT_SECRET,
+    clientID: process.env.FACEBOOK_CLIENT_ID,
+    clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
     callbackURL: 'http://localhost:3030/api/auth/facebook/callback',
 }, async (accessToken, refreshToken, profile, done) => {
     try {
@@ -20,10 +21,10 @@ passport.use(new FacebookStrategy({
         if (!user) {
             user = user_model_cjs_1.User.fromFacebook(profile);
         }
-        done(null, user);
+        return await done(null, user);
     }
     catch (err) {
-        done(err, null);
+        return await done(err, null);
     }
 }));
 passport.serializeUser((user, done) => {

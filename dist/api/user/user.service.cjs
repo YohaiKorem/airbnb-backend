@@ -33,16 +33,25 @@ async function query(filterBy = {}) {
         throw err;
     }
 }
-async function getById(userId) {
+async function getById(userId, isSocial = false) {
+    console.log('userId', userId);
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('user');
         const user = await collection.findOne({ _id: userId });
+        if (!user) {
+            if (isSocial)
+                return null;
+            throw new Error('User not found');
+        }
         delete user.password;
         return user;
     }
     catch (err) {
         logger_service_cjs_1.loggerService.error(`while finding user ${userId}`, err);
-        throw err;
+        if (!isSocial)
+            throw err;
+        else
+            return null;
     }
 }
 async function getByUsername(username) {

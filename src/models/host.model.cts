@@ -1,7 +1,8 @@
+import { ObjectId } from 'mongodb'
 import { User } from './user.model.cjs'
 export class StayHost {
   constructor(
-    public _id: string,
+    public _id: string | ObjectId,
     public fullname: string,
     public location: string,
     public responseTime: string,

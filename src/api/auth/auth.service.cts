@@ -45,13 +45,25 @@ export function getLoginToken(user) {
   return cryptr.encrypt(JSON.stringify(userInfo))
 }
 
-async function authFacebook(accessToken, refreshToken, profile, cb) {
-  try {
-    const user = await userService.getById(profile.id)
-    if (!user) console.log('adding new facebook user to DB')
-    const newUser = User.fromFacebook(profile)
-  } catch (error) {}
+async function signupFromFacebook(facebookUser) {
+  const newUser = User.fromFacebook(facebookUser)
+  console.log('newUser from facebook', newUser)
+
+  const user = await signup(
+    newUser.username,
+    newUser.password,
+    newUser.fullname,
+    newUser.imgUrl
+  )
+  return user
 }
+// async function authFacebook(accessToken, refreshToken, profile, cb) {
+//   try {
+//     const user = await userService.getById(profile.id)
+//     if (!user) console.log('adding new facebook user to DB')
+//     const newUser = User.fromFacebook(profile)
+//   } catch (error) {}
+// }
 
 export function validateToken(loginToken) {
   try {
@@ -69,5 +81,5 @@ module.exports = {
   login,
   getLoginToken,
   validateToken,
-  authFacebook,
+  signupFromFacebook,
 }

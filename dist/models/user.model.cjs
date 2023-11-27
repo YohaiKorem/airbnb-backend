@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
+const mongodb_1 = require("mongodb");
 class User {
     fullname;
     imgUrl;
@@ -19,7 +20,7 @@ class User {
         this._id = _id;
     }
     static fromFacebook(facebookUser) {
-        return new User(facebookUser.name, facebookUser.response.picture.data.url, facebookUser.firstName, [], false, facebookUser.authToken, facebookUser.id);
+        return new User(facebookUser.name, facebookUser.response.picture.data.url, facebookUser.firstName, [], false, facebookUser.authToken, new mongodb_1.ObjectId(facebookUser.id));
     }
     static fromGoogle(googleUser) {
         return new User(googleUser.name, googleUser.photoUrl, googleUser.firstName, [], false, googleUser.idToken, googleUser.id);

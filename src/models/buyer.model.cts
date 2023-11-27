@@ -1,8 +1,9 @@
+import { ObjectId } from 'mongodb'
 import { User } from './user.model.cjs'
 
 export class Buyer {
   constructor(
-    public _id: string,
+    public _id: string | ObjectId,
     public fullname: string,
     public imgUrl: string
   ) {}

@@ -8,8 +8,9 @@ const authService = require('./auth.service.cjs');
 const userService = require('../user/user.service.cjs');
 const FacebookStrategy = require('passport-facebook').strategy;
 const passport = require('passport');
-const index_cjs_1 = __importDefault(require("../../config/index.cjs"));
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 async function login(req, res) {
     const { username, password } = req.body;
     try {
@@ -51,29 +52,46 @@ async function logout(req, res) {
         res.status(500).send({ err: 'Failed to logout' });
     }
 }
-async function socialLogin(req, res) {
-    const { provider } = req.body;
-    console.log(req.body);
-    console.log(provider);
-}
-async function authenticateFacebook(accessToken, refreshToken, profile, cb) {
-    const user = await userService.getById(profile.id);
-    if (!user)
-        console.log('adding new facebook user to DB');
-}
 async function verifyToken(req, res) {
-    const { authToken, email, firstName, id, lastName, name, photoUrl, provider, response, } = req.query;
-    const appAccessToken = index_cjs_1.default['FACEBOOK_CLIENT_ID']; // You get this from your Facebook App settings
-    const url = `https://graph.facebook.com/debug_token?input_token=${JSON.stringify(authToken)}&access_token=${appAccessToken}`;
-    console.log('url', url);
+    const { authToken } = req.query;
+    const url = `https://graph.facebook.com/me?fields=id,name&access_token=${authToken}`;
     try {
         const response = await axios.get(url);
-        console.log(response.data);
-        return response.data; // This contains the verification result
+        if (response && response.data)
+            socialSignIn(response.data, req, res);
     }
     catch (err) {
         // Handle errors here (invalid token, network issues, etc.)
+        console.log(err, 'had an error');
         res.status(500).send({ name: 'Failed to verify user', msg: err });
+    }
+}
+async function socialSignIn(responseData, req, res) {
+    const { id, name } = responseData;
+    console.log('user', name);
+    let user;
+    try {
+        user = await userService.getById(id, true);
+    }
+    catch (err) {
+        console.log('failed to get user by id', err);
+        user = await signupFromFacebook(req, res);
+    }
+    finally {
+        const loginToken = authService.getLoginToken(user);
+        logger_service_cjs_1.loggerService.info('User login: ', user);
+        res.cookie('loginToken', loginToken);
+        res.json(user);
+    }
+}
+async function signupFromFacebook(req, res) {
+    try {
+        const user = await authService.signupFromFacebook(req.query);
+        return user;
+    }
+    catch ({ name, message }) {
+        logger_service_cjs_1.loggerService.error('Failed to signup with facebook ' + name);
+        res.status(500).send({ name: 'Failed to signup', msg: message });
     }
 }
 async function errCallback(req, res) {
@@ -83,9 +101,7 @@ module.exports = {
     login,
     signup,
     logout,
-    socialLogin,
     errCallback,
-    authenticateFacebook,
     verifyToken,
 };
 //# sourceMappingURL=auth.controller.cjs.map

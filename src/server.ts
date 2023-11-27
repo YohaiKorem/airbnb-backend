@@ -3,6 +3,8 @@ import session from 'express-session'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import path from 'path'
+import dotenv from 'dotenv'
+dotenv.config()
 import { createServer } from 'http'
 import { fileURLToPath } from 'url'
 import { dirname } from 'path'
@@ -18,6 +20,7 @@ import {
   sessionPassport,
 } from './services/passport.service.cjs'
 import config from './config/index.cjs'
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const app = express()
@@ -29,13 +32,12 @@ app.use(express.json())
 app.use(express.static('public'))
 app.use(
   session({
-    secret: process.env.SESSION_SECRET || config['secretKey'],
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: { secure: process.env.NODE_ENV === 'production' },
   })
 )
-
 app.use(initializePassport())
 app.use(sessionPassport())
 if (process.env.NODE_ENV === 'production') {
