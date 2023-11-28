@@ -57,7 +57,7 @@ async function getById(userId, isSocial = false) {
     }
 }
 async function getBySocialId(userId) {
-    console.log('userId', userId);
+    console.log('socialuserId', userId);
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('user');
         const user = await collection.findOne({ id: userId });

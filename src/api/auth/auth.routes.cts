@@ -3,16 +3,16 @@ const {
   login,
   signup,
   logout,
-  socialLogin,
   errCallback,
-  verifyToken,
+  verifySocialToken,
 } = require('./auth.controller.cjs')
 const passport = require('passport')
 const router = express.Router()
 
 router.post('/login', login)
 router.post('/signup', signup)
-router.get('/facebook', verifyToken)
+router.get('/facebook', verifySocialToken)
+router.get('/google', verifySocialToken)
 // router.get(
 //   '/facebook/callback',
 //   passport.authenticate('facebook', { failureRedirect: 'auth/err/callback' }),

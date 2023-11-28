@@ -46,16 +46,12 @@ export function getLoginToken(user) {
   return cryptr.encrypt(JSON.stringify(userInfo))
 }
 
-async function signupFromFacebook(facebookUser) {
-  facebookUser.response = JSON.parse(facebookUser.response)
+async function signupFromSocial(socialUser) {
+  console.log('socialUser in auth serivce')
 
-  const user = await userService.addFromSocial(facebookUser)
-
-  return user
-}
-
-async function signupFromGoogle(googleUser) {
-  return await userService.addFromSocial(googleUser)
+  if (socialUser.provider === 'FACEBOOK')
+    socialUser.response = JSON.parse(socialUser.response)
+  return await userService.addFromSocial(socialUser)
 }
 
 export function validateToken(loginToken) {
@@ -74,6 +70,5 @@ module.exports = {
   login,
   getLoginToken,
   validateToken,
-  signupFromFacebook,
-  signupFromGoogle,
+  signupFromSocial,
 }

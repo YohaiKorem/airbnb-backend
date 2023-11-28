@@ -43,11 +43,16 @@ exports.getLoginToken = getLoginToken;
 async function signupFromFacebook(facebookUser) {
     facebookUser.response = JSON.parse(facebookUser.response);
     const user = await userService.addFromSocial(facebookUser);
-    console.log(user);
     return user;
 }
 async function signupFromGoogle(googleUser) {
     return await userService.addFromSocial(googleUser);
+}
+async function signupFromSocial(socialUser) {
+    console.log('socialUser in auth serivce');
+    if (socialUser.provider === 'FACEBOOK')
+        socialUser.response = JSON.parse(socialUser.response);
+    return await userService.addFromSocial(socialUser);
 }
 function validateToken(loginToken) {
     try {
@@ -67,5 +72,7 @@ module.exports = {
     getLoginToken,
     validateToken,
     signupFromFacebook,
+    signupFromGoogle,
+    signupFromSocial,
 };
 //# sourceMappingURL=auth.service.cjs.map

@@ -52,7 +52,26 @@ async function logout(req, res) {
         res.status(500).send({ err: 'Failed to logout' });
     }
 }
-async function verifyToken(req, res) {
+async function verifySocialToken(req, res) {
+    let url;
+    const { provider } = req.query;
+    // provider === 'FACEBOOK'
+    //   ? verifyFacebookToken(req, res)
+    //   : verifyGoogleToken(req, res)
+    const method = provider === 'FACEBOOK'
+        ? async () => axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${req.query.authToken}`)
+        : async () => axios.post(`https://oauth2.googleapis.com/tokeninfo?id_token=${req.query.idToken}`);
+    try {
+        const response = await method();
+        if (response && response.data)
+            socialSignIn(response.data, req, res);
+    }
+    catch (err) {
+        console.log(err, `had an error verifying from ${provider}`);
+        res.status(500).send({ name: 'Failed to verify user', msg: err });
+    }
+}
+async function verifyFacebookToken(req, res) {
     const { authToken } = req.query;
     const url = `https://graph.facebook.com/me?fields=id,name&access_token=${authToken}`;
     try {
@@ -61,25 +80,40 @@ async function verifyToken(req, res) {
             socialSignIn(response.data, req, res);
     }
     catch (err) {
-        // Handle errors here (invalid token, network issues, etc.)
-        console.log(err, 'had an error');
+        console.log(err, 'had an error verifying from facebook');
+        res.status(500).send({ name: 'Failed to verify user', msg: err });
+    }
+}
+async function verifyGoogleToken(req, res) {
+    console.log(req.query);
+    const { idToken } = req.query;
+    const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`;
+    try {
+        const response = await axios.post(url);
+        if (response && response.data)
+            socialSignIn(response.data, req, res);
+    }
+    catch (err) {
+        console.log(err, 'had an error verifying from google');
         res.status(500).send({ name: 'Failed to verify user', msg: err });
     }
 }
 async function socialSignIn(responseData, req, res) {
-    const { id, name } = responseData;
-    console.log('user', name);
+    const { name } = responseData;
+    const { provider, id } = req.query;
     let user;
     try {
         user = await userService.getBySocialId(id);
         if (!user)
-            user = await signupFromFacebook(req, res);
+            user = await signupFromSocial(req, res);
         if (!user)
-            throw new Error('Failed to create user from Facebook data');
-        const response = JSON.parse(req.query.response);
-        // user.imgUrl = req.query.photoUrl
-        user.imgUrl = response.picture.data.url;
-        console.log(user);
+            throw new Error(`Failed to create user from ${provider} data`);
+        if (provider === 'FACEBOOK') {
+            const response = JSON.parse(req.query.response);
+            user.imgUrl = response.picture.data.url;
+        }
+        else
+            user.imgUrl = req.query.photoUrl;
         const loginToken = authService.getLoginToken(user);
         logger_service_cjs_1.loggerService.info('User login: ', user);
         res.cookie('loginToken', loginToken);
@@ -92,13 +126,13 @@ async function socialSignIn(responseData, req, res) {
             .send({ error: 'Failed to process social sign-in', message: err.message });
     }
 }
-async function signupFromFacebook(req, res) {
+async function signupFromSocial(req, res) {
     try {
-        const user = await authService.signupFromFacebook(req.query);
+        const user = await authService.signupFromSocial(req.query);
         return user;
     }
     catch ({ name, message }) {
-        logger_service_cjs_1.loggerService.error('Failed to signup with facebook ' + name);
+        logger_service_cjs_1.loggerService.error(`Failed to signup with ${req.query.provider} ${name}`);
         res.status(500).send({ name: 'Failed to signup', msg: message });
     }
 }
@@ -110,6 +144,8 @@ module.exports = {
     signup,
     logout,
     errCallback,
-    verifyToken,
+    verifyFacebookToken,
+    verifyGoogleToken,
+    verifySocialToken,
 };
 //# sourceMappingURL=auth.controller.cjs.map

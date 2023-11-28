@@ -57,7 +57,7 @@ async function getById(userId, isSocial: boolean = false) {
   }
 }
 async function getBySocialId(userId) {
-  console.log('userId', userId)
+  console.log('socialuserId', userId)
 
   try {
     const collection = await dbService.getCollection('user')
