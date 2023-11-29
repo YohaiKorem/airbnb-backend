@@ -35,19 +35,11 @@ function getLoginToken(user) {
     const userInfo = {
         _id: user._id,
         fullname: user.fullname,
-        isAdmin: user.isAdmin,
+        isAdmin: user.isOwner,
     };
     return cryptr.encrypt(JSON.stringify(userInfo));
 }
 exports.getLoginToken = getLoginToken;
-async function signupFromFacebook(facebookUser) {
-    facebookUser.response = JSON.parse(facebookUser.response);
-    const user = await userService.addFromSocial(facebookUser);
-    return user;
-}
-async function signupFromGoogle(googleUser) {
-    return await userService.addFromSocial(googleUser);
-}
 async function signupFromSocial(socialUser) {
     console.log('socialUser in auth serivce');
     if (socialUser.provider === 'FACEBOOK')
@@ -71,8 +63,6 @@ module.exports = {
     login,
     getLoginToken,
     validateToken,
-    signupFromFacebook,
-    signupFromGoogle,
     signupFromSocial,
 };
 //# sourceMappingURL=auth.service.cjs.map

@@ -36,7 +36,7 @@ async function query(filterBy = {}) {
     }
 }
 async function getById(userId, isSocial = false) {
-    console.log('userId', userId);
+    console.log('userId in getById userservice', userId);
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('user');
         const user = await collection.findOne({ _id: userId });

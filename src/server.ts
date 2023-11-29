@@ -15,11 +15,10 @@ import orderRoutes from './api/order/order.routes.cjs'
 import { socketService } from './services/socket.service.cjs'
 import setupAsyncLocalStorage from './middlewares/setupAls.middleware.cjs'
 import { loggerService } from './services/logger.service.cjs'
-import {
-  initializePassport,
-  sessionPassport,
-} from './services/passport.service.cjs'
-import config from './config/index.cjs'
+// import {
+//   initializePassport,
+//   sessionPassport,
+// } from './services/passport.service.cjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -38,8 +37,8 @@ app.use(
     cookie: { secure: process.env.NODE_ENV === 'production' },
   })
 )
-app.use(initializePassport())
-app.use(sessionPassport())
+// app.use(initializePassport())
+// app.use(sessionPassport())
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.resolve(__dirname, 'public')))
 } else {

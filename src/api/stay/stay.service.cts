@@ -5,6 +5,8 @@ import { ObjectId } from 'mongodb'
 import { Stay, StayFilter, SearchParam } from '../../models/stay.model.cjs'
 import { User } from '../../models/user.model.cjs'
 import { StayHost } from '../../models/host.model.cjs'
+import { Order } from '../../models/order.model.cjs'
+const orderService = require('../order/order.service.cjs')
 
 export async function query(data): Promise<Stay[]> {
   const criteria = _buildCriteria(data)
@@ -78,6 +80,20 @@ export async function update(stay: Stay): Promise<Stay> {
       _id: new ObjectId(_id),
     })
     if (!updatedStay) throw new Error('Stay not found')
+    const orderCollection = await dbService.getCollection('order')
+    const relevantOrders = await orderCollection
+      .find({ 'stay._id': _id })
+      .toArray()
+    relevantOrders.forEach(async (order: Order) => {
+      const updatedOrder = { ...order }
+      updatedOrder.stay = {
+        _id: stay._id,
+        name: stay.name,
+        price: stay.price,
+        address: stay.loc.city,
+      }
+      await orderService.update(updatedOrder)
+    })
     const noramlizedStayForFrontend = _normalizeStayForFrontend(updatedStay)
     return noramlizedStayForFrontend
   } catch (err) {

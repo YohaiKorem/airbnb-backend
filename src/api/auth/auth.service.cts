@@ -37,11 +37,11 @@ export async function signup(username, password, fullname, imgUrl = null) {
   return userService.add({ username, password: hash, fullname, imgUrl })
 }
 
-export function getLoginToken(user) {
+export function getLoginToken(user: User) {
   const userInfo = {
     _id: user._id,
     fullname: user.fullname,
-    isAdmin: user.isAdmin,
+    isAdmin: user.isOwner,
   }
   return cryptr.encrypt(JSON.stringify(userInfo))
 }

@@ -29,10 +29,5 @@ router.get('/host/stays/:id', getAllHostStaysById)
 router.post('/', addStay)
 router.put('/:id', updateStay)
 router.delete('/:id', removeStay)
-// router.delete('/:id', requireAuth, requireAdmin, removeStay)
-router.get('/:id/msg', getStayMsgs)
-router.post('/:id/msg', addStayMsg)
-router.put('/:id/msg/:msgId', updateStayMsg)
-router.delete('/:id/msg/:msgId', removeStayMsg)
 
 module.exports = router

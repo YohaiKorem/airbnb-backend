@@ -1,23 +1,32 @@
-const logger = require('./logger.service.cjs')
+import { loggerService } from './logger.service.cjs'
+import { Server } from 'socket.io'
 var gIo = null
-
+const SOCKET_LOGIN = 'set-user-socket'
+const SOCKET_LOGOUT = 'unset-user-socket'
+const SOCKET_SET_TOPIC = 'chat-set-topic'
+const SOCKET_ADD_MSG = 'chat-add-msg'
+const SOCKET_SEND_MSG = 'chat-send-msg'
+const SOCKET_USER_UPDATED = 'user-updated'
+const SOCKET_ORDER_ADDED = 'order-added'
+const SOCKET_ORDER_UPDATED = 'order-updated'
 function setupSocketAPI(http) {
-  gIo = require('socket.io')(http, {
+  gIo = new Server(http, {
     cors: {
       origin: '*',
     },
   })
+
   gIo.on('connection', (socket) => {
-    logger.info(`New connected socket [id: ${socket.id}]`)
+    loggerService.info(`New connected socket [id: ${socket.id}]`)
     socket.on('disconnect', (socket) => {
-      logger.info(`Socket disconnected [id: ${socket.id}]`)
+      loggerService.info(`Socket disconnected [id: ${socket.id}]`)
     })
-    socket.on('chat-set-topic', (topic) => {
+    socket.on(SOCKET_SET_TOPIC, (topic) => {
       console.log('topic', topic)
       if (socket.myTopic === topic) return
       if (socket.myTopic) {
         socket.leave(socket.myTopic)
-        logger.info(
+        loggerService.info(
           `Socket is leaving topic ${socket.myTopic} [id: ${socket.id}]`
         )
       }
@@ -25,62 +34,70 @@ function setupSocketAPI(http) {
       socket.myTopic = topic
     })
 
-    socket.on('task-updated', (data) => {
-      console.log(' socketservice  updated task', data)
+    socket.on(SOCKET_ORDER_UPDATED, (data) => {
+      console.log(' socketservice  updated order', data)
 
-      logger.info(
+      loggerService.info(
         `New activity from socket [id: ${socket.id}], emitting to topic ${socket.myTopic}`
       )
-      gIo.emit('task-updated', data)
+      gIo.emit(SOCKET_ORDER_UPDATED, data)
     })
-    socket.on('stay-updated', (stay) => {
-      // console.log('stay update', stay)
-      logger.info(
-        `New stay update from socket [id: ${socket.id}], emitting to stayId ${socket.myTopic}`
-      )
-      gIo.emit('stay-updated', stay)
-    })
-    socket.on('task-dropped', (data) => {
-      console.log('task dropped', data)
-      logger.info(
+    socket.on(SOCKET_ORDER_ADDED, (data) => {
+      console.log(' socketservice added order', data)
+
+      loggerService.info(
         `New activity from socket [id: ${socket.id}], emitting to topic ${socket.myTopic}`
       )
-      gIo.to(socket.myTopic).emit('task-dropped', data)
+      gIo.emit(SOCKET_ORDER_ADDED, data)
     })
-    socket.on('user-invited', (data) => {
-      const { stayId, userId, type } = data
-      const res = {
-        type,
-        data: stayId,
-        userId,
-      }
-      logger.info(`user with id: ${userId} invited to stay with id: ${stayId}`)
-      emitToUser(res)
+    socket.on(SOCKET_USER_UPDATED, (user) => {
+      console.log('user update', user)
+      loggerService.info(
+        `New user update from socket [id: ${socket.id}], emitting to userId ${socket.myTopic}`
+      )
+      gIo.emit(SOCKET_USER_UPDATED, user)
     })
-    socket.on('chat-send-msg', (msg) => {
+    // socket.on('task-dropped', (data) => {
+    //   console.log('task dropped', data)
+    //   logger.info(
+    //     `New activity from socket [id: ${socket.id}], emitting to topic ${socket.myTopic}`
+    //   )
+    //   gIo.to(socket.myTopic).emit('task-dropped', data)
+    // })
+    // socket.on('user-invited', (data) => {
+    //   const { stayId, userId, type } = data
+    //   const res = {
+    //     type,
+    //     data: stayId,
+    //     userId,
+    //   }
+    //   logger.info(`user with id: ${userId} invited to stay with id: ${stayId}`)
+    //   emitToUser(res)
+    // })
+    socket.on(SOCKET_SEND_MSG, (msg) => {
       console.log(msg)
-      logger.info(
+      loggerService.info(
         `New chat msg from socket [id: ${socket.id}], emitting to topic ${socket.myTopic}`
       )
       // emits to all sockets:
       // gIo.emit('chat addMsg', msg)
       // emits only to sockets in the same room
-      gIo.to(socket.myTopic).emit('chat-add-msg', msg)
+      gIo.to(socket.myTopic).emit(SOCKET_ADD_MSG, msg)
     })
     socket.on('user-watch', (userId) => {
-      logger.info(
+      loggerService.info(
         `user-watch from socket [id: ${socket.id}], on user ${userId}`
       )
       socket.join('watching:' + userId)
     })
-    socket.on('set-user-socket', (userId) => {
-      logger.info(
+    socket.on(SOCKET_LOGIN, (userId) => {
+      loggerService.info(
         `Setting socket.userId = ${userId} for socket [id: ${socket.id}]`
       )
       socket.userId = userId
     })
-    socket.on('unset-user-socket', () => {
-      logger.info(`Removing socket.userId for socket [id: ${socket.id}]`)
+    socket.on(SOCKET_LOGOUT, () => {
+      loggerService.info(`Removing socket.userId for socket [id: ${socket.id}]`)
       delete socket.userId
     })
   })
@@ -97,12 +114,12 @@ async function emitToUser({ type, data, userId }) {
   const socket = await _getUserSocket(userId)
 
   if (socket) {
-    logger.info(
+    loggerService.info(
       `Emiting event: ${type} to user: ${userId} socket [id: ${socket.id}]`
     )
     socket.emit(type, data)
   } else {
-    logger.info(`No active socket for user: ${userId}`)
+    loggerService.info(`No active socket for user: ${userId}`)
     // _printSockets()
   }
 }
@@ -112,19 +129,19 @@ async function emitToUser({ type, data, userId }) {
 async function broadcast({ type, data, room = null, userId }) {
   userId = userId.toString()
 
-  logger.info(`Broadcasting event: ${type}`)
+  loggerService.info(`Broadcasting event: ${type}`)
   const excludedSocket = await _getUserSocket(userId)
   if (room && excludedSocket) {
-    logger.info(`Broadcast to room ${room} excluding user: ${userId}`)
+    loggerService.info(`Broadcast to room ${room} excluding user: ${userId}`)
     excludedSocket.broadcast.to(room).emit(type, data)
   } else if (excludedSocket) {
-    logger.info(`Broadcast to all excluding user: ${userId}`)
+    loggerService.info(`Broadcast to all excluding user: ${userId}`)
     excludedSocket.broadcast.emit(type, data)
   } else if (room) {
-    logger.info(`Emit to room: ${room}`)
+    loggerService.info(`Emit to room: ${room}`)
     gIo.to(room).emit(type, data)
   } else {
-    logger.info(`Emit to all`)
+    loggerService.info(`Emit to all`)
     gIo.emit(type, data)
   }
 }

@@ -11,7 +11,7 @@ router.get('/:id', log, getOrderById);
 router.get('/orders/:id', log, getOrders);
 router.get('/orders/host/:id', log, getOrders);
 router.get('/orders/buyer/:id', log, getOrders);
-router.post('/', log, requireAuth, addOrder);
+router.post('/', log, addOrder);
 router.put('/:id', log, updateOrder);
 router.delete('/:id', requireAuth, deleteOrder);
 module.exports = router;

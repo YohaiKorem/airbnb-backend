@@ -5,6 +5,7 @@ const db_service_cjs_1 = require("../../services/db.service.cjs");
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 const util_service_cjs_1 = require("../../services/util.service.cjs");
 const mongodb_1 = require("mongodb");
+const orderService = require('../order/order.service.cjs');
 async function query(data) {
     const criteria = _buildCriteria(data);
     const { pagination } = data;
@@ -78,6 +79,20 @@ async function update(stay) {
         });
         if (!updatedStay)
             throw new Error('Stay not found');
+        const orderCollection = await db_service_cjs_1.dbService.getCollection('order');
+        const relevantOrders = await orderCollection
+            .find({ 'stay._id': _id })
+            .toArray();
+        relevantOrders.forEach(async (order) => {
+            const updatedOrder = { ...order };
+            updatedOrder.stay = {
+                _id: stay._id,
+                name: stay.name,
+                price: stay.price,
+                address: stay.loc.city,
+            };
+            await orderService.update(updatedOrder);
+        });
         const noramlizedStayForFrontend = _normalizeStayForFrontend(updatedStay);
         return noramlizedStayForFrontend;
     }

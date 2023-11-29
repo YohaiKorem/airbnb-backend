@@ -71,33 +71,6 @@ async function verifySocialToken(req, res) {
         res.status(500).send({ name: 'Failed to verify user', msg: err });
     }
 }
-async function verifyFacebookToken(req, res) {
-    const { authToken } = req.query;
-    const url = `https://graph.facebook.com/me?fields=id,name&access_token=${authToken}`;
-    try {
-        const response = await axios.get(url);
-        if (response && response.data)
-            socialSignIn(response.data, req, res);
-    }
-    catch (err) {
-        console.log(err, 'had an error verifying from facebook');
-        res.status(500).send({ name: 'Failed to verify user', msg: err });
-    }
-}
-async function verifyGoogleToken(req, res) {
-    console.log(req.query);
-    const { idToken } = req.query;
-    const url = `https://oauth2.googleapis.com/tokeninfo?id_token=${idToken}`;
-    try {
-        const response = await axios.post(url);
-        if (response && response.data)
-            socialSignIn(response.data, req, res);
-    }
-    catch (err) {
-        console.log(err, 'had an error verifying from google');
-        res.status(500).send({ name: 'Failed to verify user', msg: err });
-    }
-}
 async function socialSignIn(responseData, req, res) {
     const { name } = responseData;
     const { provider, id } = req.query;
@@ -144,8 +117,6 @@ module.exports = {
     signup,
     logout,
     errCallback,
-    verifyFacebookToken,
-    verifyGoogleToken,
     verifySocialToken,
 };
 //# sourceMappingURL=auth.controller.cjs.map

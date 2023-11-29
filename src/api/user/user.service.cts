@@ -39,7 +39,7 @@ async function query(filterBy = {}) {
 }
 
 async function getById(userId, isSocial: boolean = false) {
-  console.log('userId', userId)
+  console.log('userId in getById userservice', userId)
 
   try {
     const collection = await dbService.getCollection('user')
