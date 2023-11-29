@@ -8,6 +8,7 @@ async function requireAuth(req, res, next) {
   //   req.loggedInUser = {_id: '', fullname: 'Guest'}
   //   return next()
   // }
+  console.log('req.cookies', req.cookies)
 
   if (!req?.cookies?.loginToken)
     return res.status(401).send('Not Authenticated')
@@ -30,6 +31,9 @@ async function requireOwnership(req, res, next) {
   } else {
     return res.status(400).send({ error: 'Invalid entity type' })
   }
+  console.log('path', path)
+  console.log('entityType', entityType)
+
   await getResourceOwner(entityType, entityId, userId, res, next)
 
   // try {
