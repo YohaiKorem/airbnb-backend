@@ -41,22 +41,22 @@ function getById(stayId) {
   return Promise.resolve(stay)
 }
 
-function remove(stayId, loggedinUser) {
+function remove(stayId, loggedInUser) {
   const idx = gStays.findIndex((stay) => stay._id === stayId)
   if (idx === -1) return Promise.reject('Unknonwn stay')
-  //   if (gStays[idx].owner._id !== loggedinUser._id)
+  //   if (gStays[idx].owner._id !== loggedInUser._id)
   //     return Promise.reject('Not your stay')
 
   gStays.splice(idx, 1)
   return _saveStaysToFile()
 }
 
-function save(stay, loggedinUser) {
+function save(stay, loggedInUser) {
   var savedStay
   if (stay._id) {
     savedStay = gStays.find((currStay) => currStay._id === stay._id)
     if (!savedStay) return Promise.reject('Unknonwn stay')
-    // if (savedStay.owner._id !== loggedinUser._id)
+    // if (savedStay.owner._id !== loggedInUser._id)
     // return Promise.reject('Not your stay')
 
     savedStay.name = stay.name
@@ -67,7 +67,7 @@ function save(stay, loggedinUser) {
   } else {
     savedStay = {
       _id: _makeId(),
-      owner: loggedinUser,
+      owner: loggedInUser,
       name: stay.name,
       price: stay.price,
       labels: stay.labels,

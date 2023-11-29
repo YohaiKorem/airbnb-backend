@@ -15,10 +15,6 @@ import orderRoutes from './api/order/order.routes.cjs'
 import { socketService } from './services/socket.service.cjs'
 import setupAsyncLocalStorage from './middlewares/setupAls.middleware.cjs'
 import { loggerService } from './services/logger.service.cjs'
-// import {
-//   initializePassport,
-//   sessionPassport,
-// } from './services/passport.service.cjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -37,8 +33,6 @@ app.use(
     cookie: { secure: process.env.NODE_ENV === 'production' },
   })
 )
-// app.use(initializePassport())
-// app.use(sessionPassport())
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.resolve(__dirname, 'public')))
 } else {
@@ -57,12 +51,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Routes
-// app.all('*', setupAsyncLocalStorage);
-
-// for initiating data
-// import stayService from './api/stay/stay.service.cjs'
-// import userService from './api/user/user.service.cjs'
-// userService.initUserData()
+app.all('*', setupAsyncLocalStorage)
 
 app.use('/api/auth', authRoutes)
 app.use('/api/user', userRoutes)

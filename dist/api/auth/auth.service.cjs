@@ -5,7 +5,7 @@ const Cryptr = require('cryptr');
 const bcrypt = require('bcrypt');
 const userService = require('../user/user.service.cjs');
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
-const cryptr = new Cryptr(process.env.SECRET1 || 'Secret-Puk-1234');
+const cryptr = new Cryptr(process.env.SESSION_SECRET || 'secret-puk-1234');
 async function login(username, password) {
     console.log('username of login:', username);
     console.log('password of login:', password);
@@ -35,7 +35,7 @@ function getLoginToken(user) {
     const userInfo = {
         _id: user._id,
         fullname: user.fullname,
-        isAdmin: user.isOwner,
+        isOwner: user.isOwner,
     };
     return cryptr.encrypt(JSON.stringify(userInfo));
 }
@@ -49,11 +49,11 @@ async function signupFromSocial(socialUser) {
 function validateToken(loginToken) {
     try {
         const json = cryptr.decrypt(loginToken);
-        const loggedinUser = JSON.parse(json);
-        return loggedinUser;
+        const loggedInUser = JSON.parse(json);
+        return loggedInUser;
     }
     catch (err) {
-        console.log('Invalid login token');
+        console.log(err, 'Invalid login token');
     }
     return null;
 }

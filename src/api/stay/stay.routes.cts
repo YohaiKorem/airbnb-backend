@@ -2,18 +2,15 @@ const express = require('express')
 const {
   requireAuth,
   requireAdmin,
+  requireOwnership,
 } = require('../../middlewares/requireAuth.middleware.cjs')
 const { log } = require('../../middlewares/logger.middleware.cjs')
 const {
-  getStayMsgs,
   getStays,
   getStayById,
   addStay,
   updateStay,
   removeStay,
-  addStayMsg,
-  removeStayMsg,
-  updateStayMsg,
   getAllHostStaysById,
   getHostById,
 } = require('./stay.controller.cjs')
@@ -27,7 +24,7 @@ router.get('/:id', getStayById)
 router.get('/host/:id', getHostById)
 router.get('/host/stays/:id', getAllHostStaysById)
 router.post('/', addStay)
-router.put('/:id', updateStay)
-router.delete('/:id', removeStay)
+router.put('/:id', requireAuth, requireOwnership, updateStay)
+router.delete('/:id', requireAuth, requireOwnership, removeStay)
 
 module.exports = router

@@ -1,9 +1,6 @@
 const axios = require('axios')
 const authService = require('./auth.service.cjs')
 const userService = require('../user/user.service.cjs')
-const FacebookStrategy = require('passport-facebook').strategy
-const passport = require('passport')
-import config from '../../config/index.cjs'
 import { loggerService } from '../../services/logger.service.cjs'
 import dotenv from 'dotenv'
 dotenv.config()
@@ -15,7 +12,6 @@ async function login(req, res) {
     const loginToken = authService.getLoginToken(user)
     loggerService.info('User login: ', user)
     res.cookie('loginToken', loginToken)
-    console.log(user)
     res.json(user)
   } catch (err) {
     loggerService.error('Failed to Login ' + err)

@@ -2,6 +2,7 @@ const express = require('express')
 const {
   requireAuth,
   requireAdmin,
+  requireOwnership,
 } = require('../../middlewares/requireAuth.middleware.cjs')
 const { log } = require('../../middlewares/logger.middleware.cjs')
 const {
@@ -16,12 +17,12 @@ const router = express.Router()
 // middleware that is specific to this router
 // router.use(requireAuth)
 
-router.get('/:id', log, getOrderById)
-router.get('/orders/:id', log, getOrders)
-router.get('/orders/host/:id', log, getOrders)
-router.get('/orders/buyer/:id', log, getOrders)
-router.post('/', log, addOrder)
-router.put('/:id', log, updateOrder)
+router.get('/:id', log, requireAuth, getOrderById)
+router.get('/orders/:id', log, requireAuth, getOrders)
+router.get('/orders/host/:id', log, requireAuth, getOrders)
+router.get('/orders/buyer/:id', log, requireAuth, getOrders)
+router.post('/', log, requireAuth, addOrder)
+router.put('/:id', log, requireAuth, requireOwnership, updateOrder)
 router.delete('/:id', requireAuth, deleteOrder)
 
 module.exports = router

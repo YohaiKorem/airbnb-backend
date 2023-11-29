@@ -6,8 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const axios = require('axios');
 const authService = require('./auth.service.cjs');
 const userService = require('../user/user.service.cjs');
-const FacebookStrategy = require('passport-facebook').strategy;
-const passport = require('passport');
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -18,7 +16,6 @@ async function login(req, res) {
         const loginToken = authService.getLoginToken(user);
         logger_service_cjs_1.loggerService.info('User login: ', user);
         res.cookie('loginToken', loginToken);
-        console.log(user);
         res.json(user);
     }
     catch (err) {

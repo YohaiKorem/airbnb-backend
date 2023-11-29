@@ -69,21 +69,21 @@ async function addOrder(req, res) {
 }
 
 // async function addOrder(req, res) {
-//   var { loggedinUser } = req
+//   var { loggedInUser } = req
 
 //   try {
 //     var order = req.body
-//     order.byUserId = loggedinUser._id
+//     order.byUserId = loggedInUser._id
 //     order = await orderService.add(order)
 
 //     // prepare the updated order for sending out
 //     order.aboutUser = await userService.getById(order.aboutUserId)
 
-//     loggedinUser = await userService.update(loggedinUser)
-//     order.byUser = loggedinUser
+//     loggedInUser = await userService.update(loggedInUser)
+//     order.byUser = loggedInUser
 
 //     // User info is saved also in the login-token, update it
-//     const loginToken = authService.getLoginToken(loggedinUser)
+//     const loginToken = authService.getLoginToken(loggedInUser)
 //     res.cookie('loginToken', loginToken)
 
 //     delete order.aboutUserId
@@ -92,7 +92,7 @@ async function addOrder(req, res) {
 //     socketService.broadcast({
 //       type: 'order-added',
 //       data: order,
-//       userId: loggedinUser._id,
+//       userId: loggedInUser._id,
 //     })
 //     socketService.emitToUser({
 //       type: 'order-about-you',
@@ -100,7 +100,7 @@ async function addOrder(req, res) {
 //       userId: order.aboutUser._id,
 //     })
 
-//     const fullUser = await userService.getById(loggedinUser._id)
+//     const fullUser = await userService.getById(loggedInUser._id)
 //     socketService.emitTo({
 //       type: 'user-updated',
 //       data: fullUser,

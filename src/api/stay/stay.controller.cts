@@ -93,12 +93,8 @@ async function getHostById(req, res) {
   }
 }
 
-async function getStayMsgs(req, res) {
-  console.log(req)
-}
-
 async function addStay(req, res) {
-  const { loggedinUser } = req
+  const { loggedInUser } = req
 
   try {
     const stay = req.body
@@ -113,7 +109,6 @@ async function addStay(req, res) {
 async function updateStay(req, res) {
   try {
     const stay = req.body
-    console.log('stay in stay controller update', stay)
 
     const updatedStay = await stayService.update(stay)
     return res.json(updatedStay)
@@ -136,50 +131,6 @@ async function removeStay(req, res) {
   }
 }
 
-async function updateStayMsg(req, res) {
-  const { loggedinUser } = req
-  try {
-    const stayId = req.params.id
-    const { msgId } = req.params
-    const msg = {
-      id: msgId,
-      txt: req.body.txt,
-      by: loggedinUser,
-    }
-    const updatedMsg = await stayService.updateStayMsg(msg, stayId)
-    return res.json(updatedMsg)
-  } catch (err) {
-    console.log(err, 'cannot update stay message right now')
-  }
-}
-async function addStayMsg(req, res) {
-  const { loggedinUser } = req
-  try {
-    const stayId = req.params.id
-    const msg = {
-      txt: req.body.txt,
-      by: loggedinUser,
-    }
-    const savedMsg = await stayService.addStayMsg(stayId, msg)
-    res.json(savedMsg)
-  } catch (err) {
-    loggerService.error('Failed to update stay', err)
-    res.status(500).send({ err: 'Failed to update stay' })
-  }
-}
-
-async function removeStayMsg(req, res) {
-  try {
-    const stayId = req.params.id
-    const { msgId } = req.params
-
-    const removedId = await stayService.removeStayMsg(stayId, msgId)
-    res.send(removedId)
-  } catch (err) {
-    loggerService.error('Failed to remove stay msg', err)
-    res.status(500).send({ err: 'Failed to remove stay msg' })
-  }
-}
 function _parseQuery(query) {
   const res: any = {}
   for (let [key, value] of Object.entries(query)) {
@@ -197,14 +148,10 @@ function _parseQuery(query) {
 
 module.exports = {
   getStays,
-  getStayMsgs,
   getStayById,
   addStay,
   updateStay,
   removeStay,
-  addStayMsg,
-  removeStayMsg,
-  updateStayMsg,
   getAllHostStaysById,
   getHostById,
 }
