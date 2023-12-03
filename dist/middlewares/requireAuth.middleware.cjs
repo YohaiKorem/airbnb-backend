@@ -21,19 +21,19 @@ async function requireAuth(req, res, next) {
 }
 async function requireOwnership(req, res, next) {
     const userId = req.loggedInUser._id;
+    console.log(req);
+    const { baseUrl } = req;
     const entityId = req.params.id;
-    const path = req.path;
     let entityType;
-    if (path.startsWith('/api/order/')) {
+    if (baseUrl === '/api/order') {
         entityType = 'order';
     }
-    else if (path.startsWith('/api/stay/')) {
+    else if (baseUrl === '/api/stay') {
         entityType = 'stay';
     }
     else {
         return res.status(400).send({ error: 'Invalid entity type' });
     }
-    console.log('path', path);
     console.log('entityType', entityType);
     await getResourceOwner(entityType, entityId, userId, res, next);
     // try {

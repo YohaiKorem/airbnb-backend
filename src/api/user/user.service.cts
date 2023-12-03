@@ -95,11 +95,20 @@ async function remove(userId) {
 
 async function update(user: User): Promise<User> {
   console.log('inside updateUser service', user)
-
+  const { _id, ...updatedData } = user
   try {
     const collection = await dbService.getCollection('user')
-    await collection.updateOne({ _id: user._id }, { $set: user })
-    const updatedUser = await collection.findOne({ _id: user._id })
+    let updatedUser
+    if (user.id) {
+      await collection.updateOne({ id: user.id }, { $set: updatedData })
+      updatedUser = await collection.findOne({ id: user.id })
+    } else if (!user.id) {
+      await collection.updateOne(
+        { _id: new ObjectId(user._id) },
+        { $set: updatedData }
+      )
+      updatedUser = await collection.findOne({ _id: new ObjectId(user._id) })
+    }
     if (!updatedUser) throw new Error('User not found')
     delete updatedUser.password
     return updatedUser

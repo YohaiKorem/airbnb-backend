@@ -4,6 +4,7 @@ const stayService = require('./stay.service.cjs');
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 async function getStays(req, res) {
     let { startDate, endDate, location, guests, minPrice, maxPrice, equipment, capacity, superhost, roomType, labels, amenities, pageIdx, pageSize, } = _parseQuery(req.query);
+    console.log(_parseQuery(req.query));
     const search = { startDate, endDate, location, guests };
     const filter = {
         labels,

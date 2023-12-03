@@ -25,7 +25,7 @@ async function getStays(req, res) {
     pageIdx,
     pageSize,
   } = _parseQuery(req.query)
-
+  console.log(_parseQuery(req.query))
   const search: SearchParam = { startDate, endDate, location, guests }
   const filter: StayFilter = {
     labels,

@@ -6,6 +6,7 @@ const {
   errCallback,
   verifySocialToken,
 } = require('./auth.controller.cjs')
+const { requireAuth } = require('../../middlewares/requireAuth.middleware.cjs')
 const router = express.Router()
 
 router.post('/login', login)
@@ -13,6 +14,6 @@ router.post('/signup', signup)
 router.get('/facebook', verifySocialToken)
 router.get('/google', verifySocialToken)
 
-router.post('/logout', logout)
+router.post('/logout', requireAuth, logout)
 router.get('/err/callback', errCallback)
 module.exports = router
