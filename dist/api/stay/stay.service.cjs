@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeStayMsg = exports.addStayMsg = exports.updateStayMsg = exports.getAllHostStaysById = exports.update = exports.add = exports.remove = exports.getById = exports.query = void 0;
+exports.initData = exports.removeStayMsg = exports.addStayMsg = exports.updateStayMsg = exports.getAllHostStaysById = exports.update = exports.add = exports.remove = exports.getById = exports.query = void 0;
 const db_service_cjs_1 = require("../../services/db.service.cjs");
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 const util_service_cjs_1 = require("../../services/util.service.cjs");
@@ -9,7 +9,6 @@ const orderService = require('../order/order.service.cjs');
 async function query(data) {
     const criteria = _buildCriteria(data);
     const { pagination } = data;
-    console.log(pagination);
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('stay');
         const stays = await collection
@@ -256,38 +255,43 @@ function _buildFilterCriteria(filter) {
         return null;
     return criteria;
 }
-// export async function initData() {
-//   const entities = require(`../../../src/data/${entity}.json`)
-//   // Convert string _id to ObjectId and update loc field
-//   const entitiesWithObjectId = entities.map((entity) => {
-//     if (entity._id && typeof entity._id === 'string') {
-//       try {
-//         entity._id = new ObjectId(entity._id)
-//       } catch (error) {
-//         entity._id = new ObjectId()
-//       }
-//     }
-//     var newLoc = {
-//       type: 'Point',
-//       coordinates: [entity.loc.lng, entity.loc.lat],
-//       country: entity.loc.country,
-//       countryCode: entity.loc.countryCode,
-//       city: entity.loc.city,
-//       address: entity.loc.address,
-//     }
-//     entity.loc = newLoc
-//     return entity
-//   })
-//   try {
-//     const collection = await dbService.getCollection(entity)
-//     await collection.insertMany(entitiesWithObjectId)
-//     console.log('Inserted entities with ObjectId')
-//     await collection.createIndex({ loc: '2dsphere' })
-//     console.log('2dsphere index created on loc field')
-//   } catch (err) {
-//     loggerService.error('Failed to insert entities or create index', err)
-//   }
-// }
+async function initData(entityType) {
+    const entities = require(`../../../src/data/${entityType}.json`);
+    // Convert string _id to ObjectId and update loc field
+    const entitiesWithObjectId = entities.map((entity) => {
+        if (entity._id && typeof entity._id === 'string') {
+            try {
+                entity._id = new mongodb_1.ObjectId(entity._id);
+            }
+            catch (error) {
+                entity._id = new mongodb_1.ObjectId();
+            }
+        }
+        if (entityType === 'stay') {
+            var newLoc = {
+                type: 'Point',
+                coordinates: [entity.loc.lng, entity.loc.lat],
+                country: entity.loc.country,
+                countryCode: entity.loc.countryCode,
+                city: entity.loc.city,
+                address: entity.loc.address,
+            };
+            entity.loc = newLoc;
+        }
+        return entity;
+    });
+    try {
+        const collection = await db_service_cjs_1.dbService.getCollection(entityType);
+        await collection.insertMany(entitiesWithObjectId);
+        console.log('Inserted entities with ObjectId');
+        await collection.createIndex({ loc: '2dsphere' });
+        console.log('2dsphere index created on loc field');
+    }
+    catch (err) {
+        logger_service_cjs_1.loggerService.error('Failed to insert entities or create index', err);
+    }
+}
+exports.initData = initData;
 module.exports = {
     remove,
     query,
@@ -299,5 +303,6 @@ module.exports = {
     updateStayMsg,
     addStayMsg,
     removeStayMsg,
+    initData,
 };
 //# sourceMappingURL=stay.service.cjs.map

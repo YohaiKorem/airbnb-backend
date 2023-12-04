@@ -15,7 +15,7 @@ module.exports = {
   add,
   addFromSocial,
   getBySocialId,
-  // initUserData,
+  initUserData,
 }
 
 async function query(filterBy = {}) {
@@ -194,23 +194,23 @@ function _buildCriteria(filterBy) {
   return criteria
 }
 
-// export async function initUserData() {
-//   const bcrypt = require('bcrypt')
-//   const users = require('../../../src/data/user.json')
+export async function initUserData() {
+  const bcrypt = require('bcrypt')
+  const users = require('../../../src/data/user.json')
 
-//   const saltRounds = 10
-//   try {
-//     const hashedUsers = await Promise.all(
-//       users.map(async (user) => {
-//         const hash = await bcrypt.hash(user.password, saltRounds)
-//         return { ...user, password: hash }
-//       })
-//     )
+  const saltRounds = 10
+  try {
+    const hashedUsers = await Promise.all(
+      users.map(async (user) => {
+        const hash = await bcrypt.hash(user.password, saltRounds)
+        return { ...user, _id: new ObjectId(user._id), password: hash }
+      })
+    )
 
-//     const collection = await dbService.getCollection('user')
-//     await collection.insertMany(hashedUsers)
-//     console.log('Inserted entities with encrypted passwords')
-//   } catch (err) {
-//     loggerService.error('Failed to insert entities or create index', err)
-//   }
-// }
+    const collection = await dbService.getCollection('user')
+    await collection.insertMany(hashedUsers)
+    console.log('Inserted entities with encrypted passwords')
+  } catch (err) {
+    loggerService.error('Failed to insert entities or create index', err)
+  }
+}

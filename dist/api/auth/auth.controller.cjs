@@ -53,9 +53,6 @@ async function logout(req, res) {
 async function verifySocialToken(req, res) {
     let url;
     const { provider } = req.query;
-    // provider === 'FACEBOOK'
-    //   ? verifyFacebookToken(req, res)
-    //   : verifyGoogleToken(req, res)
     const method = provider === 'FACEBOOK'
         ? async () => axios.get(`https://graph.facebook.com/me?fields=id,name&access_token=${req.query.authToken}`)
         : async () => axios.post(`https://oauth2.googleapis.com/tokeninfo?id_token=${req.query.idToken}`);

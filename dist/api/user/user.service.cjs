@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.initUserData = void 0;
 const { log } = require('../../middlewares/logger.middleware.cjs');
 const db_service_cjs_1 = require("../../services/db.service.cjs");
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
@@ -14,7 +15,7 @@ module.exports = {
     add,
     addFromSocial,
     getBySocialId,
-    // initUserData,
+    initUserData,
 };
 async function query(filterBy = {}) {
     const criteria = _buildCriteria(filterBy);
@@ -181,22 +182,22 @@ function _buildCriteria(filterBy) {
     // }
     return criteria;
 }
-// export async function initUserData() {
-//   const bcrypt = require('bcrypt')
-//   const users = require('../../../src/data/user.json')
-//   const saltRounds = 10
-//   try {
-//     const hashedUsers = await Promise.all(
-//       users.map(async (user) => {
-//         const hash = await bcrypt.hash(user.password, saltRounds)
-//         return { ...user, password: hash }
-//       })
-//     )
-//     const collection = await dbService.getCollection('user')
-//     await collection.insertMany(hashedUsers)
-//     console.log('Inserted entities with encrypted passwords')
-//   } catch (err) {
-//     loggerService.error('Failed to insert entities or create index', err)
-//   }
-// }
+async function initUserData() {
+    const bcrypt = require('bcrypt');
+    const users = require('../../../src/data/user.json');
+    const saltRounds = 10;
+    try {
+        const hashedUsers = await Promise.all(users.map(async (user) => {
+            const hash = await bcrypt.hash(user.password, saltRounds);
+            return { ...user, _id: new mongodb_1.ObjectId(user._id), password: hash };
+        }));
+        const collection = await db_service_cjs_1.dbService.getCollection('user');
+        await collection.insertMany(hashedUsers);
+        console.log('Inserted entities with encrypted passwords');
+    }
+    catch (err) {
+        logger_service_cjs_1.loggerService.error('Failed to insert entities or create index', err);
+    }
+}
+exports.initUserData = initUserData;
 //# sourceMappingURL=user.service.cjs.map

@@ -4,10 +4,11 @@ exports.dbService = void 0;
 const { MongoClient } = require('mongodb');
 const config = require('../config/index.cjs');
 const logger = require('./logger.service.cjs');
+const logger_service_cjs_1 = require("./logger.service.cjs");
 exports.dbService = {
     getCollection,
 };
-const dbName = 'airbnb_db';
+// const dbName = 'airbnb_db'
 var dbConn = null;
 async function getCollection(collectionName) {
     try {
@@ -16,7 +17,7 @@ async function getCollection(collectionName) {
         return collection;
     }
     catch (err) {
-        logger.error('Failed to get Mongo collection', err);
+        logger_service_cjs_1.loggerService.error('Failed to get Mongo collection', err);
         throw err;
     }
 }
@@ -33,7 +34,7 @@ async function connect() {
         return db;
     }
     catch (err) {
-        logger.error('Cannot Connect to DB', err);
+        logger_service_cjs_1.loggerService.error('Cannot Connect to DB', err);
         throw err;
     }
 }

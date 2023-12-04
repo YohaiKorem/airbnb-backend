@@ -58,9 +58,7 @@ async function logout(req, res) {
 async function verifySocialToken(req, res) {
   let url
   const { provider } = req.query
-  // provider === 'FACEBOOK'
-  //   ? verifyFacebookToken(req, res)
-  //   : verifyGoogleToken(req, res)
+
   const method =
     provider === 'FACEBOOK'
       ? async () =>

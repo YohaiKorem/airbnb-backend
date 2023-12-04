@@ -2,11 +2,11 @@ const { MongoClient } = require('mongodb')
 
 const config = require('../config/index.cjs')
 const logger = require('./logger.service.cjs')
-
+import { loggerService } from './logger.service.cjs'
 export const dbService = {
   getCollection,
 }
-const dbName = 'airbnb_db'
+// const dbName = 'airbnb_db'
 var dbConn = null
 
 async function getCollection(collectionName) {
@@ -15,7 +15,7 @@ async function getCollection(collectionName) {
     const collection = await db.collection(collectionName)
     return collection
   } catch (err) {
-    logger.error('Failed to get Mongo collection', err)
+    loggerService.error('Failed to get Mongo collection', err)
     throw err
   }
 }
@@ -31,7 +31,7 @@ async function connect() {
     dbConn = db
     return db
   } catch (err) {
-    logger.error('Cannot Connect to DB', err)
+    loggerService.error('Cannot Connect to DB', err)
     throw err
   }
 }
