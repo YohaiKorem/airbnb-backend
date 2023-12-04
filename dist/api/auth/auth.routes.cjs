@@ -8,7 +8,7 @@ router.post('/login', login);
 router.post('/signup', signup);
 router.get('/facebook', verifySocialToken);
 router.get('/google', verifySocialToken);
-router.post('/logout', requireAuth, logout);
+router.post('/logout', logout);
 router.get('/err/callback', errCallback);
 module.exports = router;
 //# sourceMappingURL=auth.routes.cjs.map
