@@ -51,8 +51,8 @@ if (process.env.NODE_ENV === 'production') {
   app.use(cors(corsOptions))
 }
 
-import { initData } from './api/stay/stay.service.cjs'
-initData('stay')
+// import { initData } from './api/stay/stay.service.cjs'
+// initData('stay')
 // Routes
 app.all('*', setupAsyncLocalStorage)
 

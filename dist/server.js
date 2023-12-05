@@ -47,8 +47,8 @@ else {
     };
     app.use(cors(corsOptions));
 }
-import { initData } from './api/stay/stay.service.cjs';
-initData('stay');
+// import { initData } from './api/stay/stay.service.cjs'
+// initData('stay')
 // Routes
 app.all('*', setupAsyncLocalStorage);
 app.use('/api/auth', authRoutes);
