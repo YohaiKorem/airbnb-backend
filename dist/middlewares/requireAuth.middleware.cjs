@@ -10,7 +10,6 @@ async function requireAuth(req, res, next) {
     //   req.loggedInUser = {_id: '', fullname: 'Guest'}
     //   return next()
     // }
-    console.log('req.cookies', req.cookies);
     if (!req?.cookies?.loginToken)
         return res.status(401).send('Not Authenticated');
     const loggedInUser = authService.validateToken(req.cookies.loginToken);
@@ -21,7 +20,6 @@ async function requireAuth(req, res, next) {
 }
 async function requireOwnership(req, res, next) {
     const userId = req.loggedInUser._id;
-    console.log(req);
     const { baseUrl } = req;
     const entityId = req.params.id;
     let entityType;
@@ -34,23 +32,7 @@ async function requireOwnership(req, res, next) {
     else {
         return res.status(400).send({ error: 'Invalid entity type' });
     }
-    console.log('entityType', entityType);
     await getResourceOwner(entityType, entityId, userId, res, next);
-    // try {
-    //   const stayId = req.params.id
-    //   const stay = await stayService.getById(stayId)
-    //   if (!stay) {
-    //     return res.status(404).send('Stay not found')
-    //   }
-    //   console.log(req.loggedInUser)
-    //   if (req.loggedInUser._id.toString() !== stay.host._id.toString()) {
-    //     console.log('')
-    //     return res.status(403).send('Not Authorized to perform this action')
-    //   }
-    //   next()
-    // } catch (err) {
-    //   res.status(500).send('Server error')
-    // }
 }
 async function getResourceOwner(entityType, entityId, userId, res, next) {
     const service = require(`../api/${entityType}/${entityType}.service.cjs`);

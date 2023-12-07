@@ -7,8 +7,6 @@ const userService = require('../user/user.service.cjs');
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
 const cryptr = new Cryptr(process.env.SESSION_SECRET || 'secret-puk-1234');
 async function login(username, password) {
-    console.log('username of login:', username);
-    console.log('password of login:', password);
     logger_service_cjs_1.loggerService.debug(`auth.service - login with username: ${username}`);
     const user = await userService.getByUsername(username);
     if (!user)

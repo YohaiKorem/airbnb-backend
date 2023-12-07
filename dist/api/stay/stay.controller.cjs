@@ -96,7 +96,6 @@ async function updateStay(req, res) {
 async function removeStay(req, res) {
     try {
         const stayId = req.params.id;
-        console.log('stayId inside removeStay', stayId);
         await stayService.remove(stayId);
         res.json(stayId);
     }

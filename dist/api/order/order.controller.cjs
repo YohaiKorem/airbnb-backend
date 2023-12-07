@@ -15,7 +15,6 @@ async function getOrders(req, res) {
             entityType = 'buyer';
         else
             entityType = 'all';
-        console.log('id inside order controller', id);
         const orders = await orderService.query(id, entityType);
         res.send(orders);
     }

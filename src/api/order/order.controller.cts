@@ -12,7 +12,6 @@ async function getOrders(req, res) {
     if (req.path.includes('/host/')) entityType = 'host'
     else if (req.path.includes('/buyer/')) entityType = 'buyer'
     else entityType = 'all'
-    console.log('id inside order controller', id)
 
     const orders: Order[] = await orderService.query(id, entityType)
     res.send(orders)

@@ -13,7 +13,6 @@ export async function query(data): Promise<Stay[]> {
   const { pagination } = data
   try {
     const collection = await dbService.getCollection('stay')
-    console.log('criteria', criteria)
 
     const stays = await collection
       .find(criteria)
@@ -275,44 +274,42 @@ function _buildFilterCriteria(filter: StayFilter) {
   return criteria
 }
 
-export async function initData(entityType) {
-  const entities = require(`../../../src/data/${entityType}.json`)
-  // Convert string _id to ObjectId and update loc field
+// export async function initData(entityType) {
+//   const entities = require(`../../../src/data/${entityType}.json`)
+//   // Convert string _id to ObjectId and update loc field
 
-  const entitiesWithObjectId = entities.map((entity) => {
-    if (entity._id && typeof entity._id === 'string') {
-      try {
-        entity._id = new ObjectId(entity._id)
-      } catch (error) {
-        entity._id = new ObjectId()
-      }
-    }
-    if (entityType === 'stay') {
-      var newLoc = {
-        type: 'Point',
-        coordinates: [entity.loc.lng, entity.loc.lat],
-        country: entity.loc.country,
-        countryCode: entity.loc.countryCode,
-        city: entity.loc.city,
-        address: entity.loc.address,
-      }
+//   const entitiesWithObjectId = entities.map((entity) => {
+//     if (entity._id && typeof entity._id === 'string') {
+//       try {
+//         entity._id = new ObjectId(entity._id)
+//       } catch (error) {
+//         entity._id = new ObjectId()
+//       }
+//     }
+//     if (entityType === 'stay') {
+//       var newLoc = {
+//         type: 'Point',
+//         coordinates: [entity.loc.lng, entity.loc.lat],
+//         country: entity.loc.country,
+//         countryCode: entity.loc.countryCode,
+//         city: entity.loc.city,
+//         address: entity.loc.address,
+//       }
 
-      entity.loc = newLoc
-    }
-    return entity
-  })
+//       entity.loc = newLoc
+//     }
+//     return entity
+//   })
 
-  try {
-    const collection = await dbService.getCollection(entityType)
-    await collection.insertMany(entitiesWithObjectId)
-    console.log('Inserted entities with ObjectId')
+//   try {
+//     const collection = await dbService.getCollection(entityType)
+//     await collection.insertMany(entitiesWithObjectId)
 
-    await collection.createIndex({ loc: '2dsphere' })
-    console.log('2dsphere index created on loc field')
-  } catch (err) {
-    loggerService.error('Failed to insert entities or create index', err)
-  }
-}
+//     await collection.createIndex({ loc: '2dsphere' })
+//   } catch (err) {
+//     loggerService.error('Failed to insert entities or create index', err)
+//   }
+// }
 
 module.exports = {
   remove,
@@ -325,5 +322,5 @@ module.exports = {
   updateStayMsg,
   addStayMsg,
   removeStayMsg,
-  initData,
+  // initData,
 }

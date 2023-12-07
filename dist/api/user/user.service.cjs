@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.initUserData = void 0;
 const { log } = require('../../middlewares/logger.middleware.cjs');
 const db_service_cjs_1 = require("../../services/db.service.cjs");
 const logger_service_cjs_1 = require("../../services/logger.service.cjs");
@@ -37,7 +36,6 @@ async function query(filterBy = {}) {
     }
 }
 async function getById(userId, isSocial = false) {
-    console.log('userId in getById userservice', userId);
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('user');
         const user = await collection.findOne({ _id: userId });
@@ -58,7 +56,6 @@ async function getById(userId, isSocial = false) {
     }
 }
 async function getBySocialId(userId) {
-    console.log('socialuserId', userId);
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('user');
         const user = await collection.findOne({ id: userId });
@@ -94,7 +91,6 @@ async function remove(userId) {
     }
 }
 async function update(user) {
-    console.log('inside updateUser service', user);
     const { _id, ...updatedData } = user;
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('user');
@@ -154,7 +150,6 @@ async function addFromSocial(socialUser) {
                 password: socialUser.idToken,
                 id: socialUser.id,
             };
-        console.log(newUser);
         const collection = await db_service_cjs_1.dbService.getCollection('user');
         await collection.insertOne(newUser);
         return newUser;
@@ -182,22 +177,21 @@ function _buildCriteria(filterBy) {
     // }
     return criteria;
 }
-async function initUserData() {
-    const bcrypt = require('bcrypt');
-    const users = require('../../../src/data/user.json');
-    const saltRounds = 10;
-    try {
-        const hashedUsers = await Promise.all(users.map(async (user) => {
-            const hash = await bcrypt.hash(user.password, saltRounds);
-            return { ...user, _id: new mongodb_1.ObjectId(user._id), password: hash };
-        }));
-        const collection = await db_service_cjs_1.dbService.getCollection('user');
-        await collection.insertMany(hashedUsers);
-        console.log('Inserted entities with encrypted passwords');
-    }
-    catch (err) {
-        logger_service_cjs_1.loggerService.error('Failed to insert entities or create index', err);
-    }
-}
-exports.initUserData = initUserData;
+// export async function initUserData() {
+//   const bcrypt = require('bcrypt')
+//   const users = require('../../../src/data/user.json')
+//   const saltRounds = 10
+//   try {
+//     const hashedUsers = await Promise.all(
+//       users.map(async (user) => {
+//         const hash = await bcrypt.hash(user.password, saltRounds)
+//         return { ...user, _id: new ObjectId(user._id), password: hash }
+//       })
+//     )
+//     const collection = await dbService.getCollection('user')
+//     await collection.insertMany(hashedUsers)
+//   } catch (err) {
+//     loggerService.error('Failed to insert entities or create index', err)
+// }
+// }
 //# sourceMappingURL=user.service.cjs.map

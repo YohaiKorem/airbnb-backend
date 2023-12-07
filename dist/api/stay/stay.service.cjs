@@ -17,7 +17,6 @@ async function query(data) {
             .skip(pagination.pageIdx * pagination.pageSize)
             .limit(pagination.pageSize)
             .toArray();
-        console.log(stays);
         let modifiedStays = stays.map((stay) => _normalizeStayForFrontend(stay));
         return modifiedStays;
     }

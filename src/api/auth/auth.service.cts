@@ -8,8 +8,6 @@ import { loggerService } from '../../services/logger.service.cjs'
 const cryptr = new Cryptr(process.env.SESSION_SECRET || 'secret-puk-1234')
 
 export async function login(username, password) {
-  console.log('username of login:', username)
-  console.log('password of login:', password)
   loggerService.debug(`auth.service - login with username: ${username}`)
 
   const user = await userService.getByUsername(username)
@@ -25,7 +23,6 @@ export async function login(username, password) {
 
 export async function signup(username, password, fullname, imgUrl = null) {
   const saltRounds = 10
-  console.log('username', username)
 
   loggerService.debug(
     `auth.service - signup with username: ${username}, fullname: ${fullname}`
@@ -47,8 +44,6 @@ export function getLoginToken(user: User) {
 }
 
 async function signupFromSocial(socialUser) {
-  console.log('socialUser in auth serivce')
-
   if (socialUser.provider === 'FACEBOOK')
     socialUser.response = JSON.parse(socialUser.response)
   return await userService.addFromSocial(socialUser)

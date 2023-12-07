@@ -39,14 +39,11 @@ async function signup(req, res) {
     res.json(user)
   } catch ({ name, message }) {
     loggerService.error('Failed to signup ' + name)
-    console.log(name)
     res.status(500).send({ name: 'Failed to signup', msg: message })
   }
 }
 
 async function logout(req, res) {
-  console.log(req.params)
-
   try {
     res.clearCookie('loginToken')
     res.send({ msg: 'Logged out successfully' })
@@ -98,7 +95,6 @@ async function socialSignIn(responseData, req, res) {
     res.cookie('loginToken', loginToken)
     res.json(user)
   } catch (err) {
-    console.log('Error in socialSignIn:', err)
     res
       .status(500)
       .send({ error: 'Failed to process social sign-in', message: err.message })
@@ -115,9 +111,7 @@ async function signupFromSocial(req, res) {
   }
 }
 
-async function errCallback(req, res) {
-  console.log('err redirect')
-}
+async function errCallback(req, res) {}
 
 module.exports = {
   login,
