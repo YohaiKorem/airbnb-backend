@@ -11,11 +11,13 @@ async function query(data) {
     const { pagination } = data;
     try {
         const collection = await db_service_cjs_1.dbService.getCollection('stay');
+        console.log('criteria', criteria);
         const stays = await collection
             .find(criteria)
             .skip(pagination.pageIdx * pagination.pageSize)
             .limit(pagination.pageSize)
             .toArray();
+        console.log(stays);
         let modifiedStays = stays.map((stay) => _normalizeStayForFrontend(stay));
         return modifiedStays;
     }
@@ -200,8 +202,11 @@ function _buildSearchCriteria(search) {
         let totalGuests = search.guests.adults + (search.guests.children || 0);
         criteria['capacity'] = { $gte: totalGuests };
     }
-    if (search.location && search.location.name && search.location.coords) {
-        const distanceLimitInMeters = 5000;
+    if (search.location &&
+        search.location.name &&
+        search.location.coords &&
+        search.location.name !== "I'm flexible") {
+        const distanceLimitInMeters = 10000;
         criteria['loc'] = {
             $near: {
                 $geometry: {

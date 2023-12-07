@@ -13,6 +13,7 @@ export async function query(data): Promise<Stay[]> {
   const { pagination } = data
   try {
     const collection = await dbService.getCollection('stay')
+    console.log('criteria', criteria)
 
     const stays = await collection
       .find(criteria)
@@ -207,8 +208,13 @@ function _buildSearchCriteria(search: SearchParam) {
     criteria['capacity'] = { $gte: totalGuests }
   }
 
-  if (search.location && search.location.name && search.location.coords) {
-    const distanceLimitInMeters = 5000
+  if (
+    search.location &&
+    search.location.name &&
+    search.location.coords &&
+    search.location.name !== "I'm flexible"
+  ) {
+    const distanceLimitInMeters = 10000
     criteria['loc'] = {
       $near: {
         $geometry: {
