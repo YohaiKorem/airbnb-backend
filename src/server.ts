@@ -69,7 +69,7 @@ app.get('/**', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
 
-loggerService.info('Hi', 90, 'Bubee')
+loggerService.info('RentRoam is up and running!')
 
 const port = process.env.PORT || 3030
 http.listen(port, () => {
