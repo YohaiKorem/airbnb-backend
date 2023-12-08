@@ -14,7 +14,7 @@ module.exports = {
     add,
     addFromSocial,
     getBySocialId,
-    initUserData,
+    // initUserData,
 };
 async function query(filterBy = {}) {
     const criteria = _buildCriteria(filterBy);

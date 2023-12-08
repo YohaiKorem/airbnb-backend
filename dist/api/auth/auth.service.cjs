@@ -21,7 +21,6 @@ async function login(username, password) {
 exports.login = login;
 async function signup(username, password, fullname, imgUrl = null) {
     const saltRounds = 10;
-    console.log('username', username);
     logger_service_cjs_1.loggerService.debug(`auth.service - signup with username: ${username}, fullname: ${fullname}`);
     if (!username || !password || !fullname)
         return Promise.reject('fullname, username and password are required!');
@@ -39,7 +38,6 @@ function getLoginToken(user) {
 }
 exports.getLoginToken = getLoginToken;
 async function signupFromSocial(socialUser) {
-    console.log('socialUser in auth serivce');
     if (socialUser.provider === 'FACEBOOK')
         socialUser.response = JSON.parse(socialUser.response);
     return await userService.addFromSocial(socialUser);

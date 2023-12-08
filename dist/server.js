@@ -3,6 +3,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
+import MongoStore from 'connect-mongo';
 import dotenv from 'dotenv';
 dotenv.config();
 import { createServer } from 'http';
@@ -27,6 +28,10 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.ATLAS_URL,
+        collectionName: process.env.ATLAS_DB_NAME,
+    }),
     sameSite: 'none',
     cookie: { secure: process.env.NODE_ENV === 'production' },
 }));
@@ -47,8 +52,6 @@ else {
     };
     app.use(cors(corsOptions));
 }
-// import { initData } from './api/stay/stay.service.cjs'
-// initData('stay')
 // Routes
 app.all('*', setupAsyncLocalStorage);
 app.use('/api/auth', authRoutes);

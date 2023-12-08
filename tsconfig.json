@@ -14,7 +14,9 @@
     "api",
     "models",
     "middlewares",
-    "src/services"
+    "src/services",
+    "dist/public",
+    "dist/public"
   ],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
