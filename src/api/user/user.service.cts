@@ -41,7 +41,7 @@ async function query(filterBy = {}) {
 async function getById(userId, isSocial: boolean = false) {
   try {
     const collection = await dbService.getCollection('user')
-    const user = await collection.findOne({ _id: userId })
+    const user = await collection.findOne({ _id: new ObjectId(userId) })
     if (!user) {
       if (isSocial) return null
       throw new Error('User not found')

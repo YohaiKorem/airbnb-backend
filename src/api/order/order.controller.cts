@@ -1,3 +1,4 @@
+import { log } from 'console'
 import { Order } from '../../models/order.model.cjs'
 import { loggerService } from '../../services/logger.service.cjs'
 const userService = require('../user/user.service.cjs')
@@ -67,6 +68,18 @@ async function addOrder(req, res) {
   }
 }
 
+async function addMsg(req, res) {
+  const { msg } = req.body
+  const { id } = req.params
+  try {
+    const updatedOrder = await orderService.addMsg(id, msg)
+    return res.json(updatedOrder)
+  } catch (err) {
+    loggerService.error('Failed to update order', err)
+    res.status(500).send({ err: 'Failed to update order' })
+  }
+}
+
 // async function addOrder(req, res) {
 //   var { loggedInUser } = req
 
@@ -119,4 +132,5 @@ module.exports = {
   addOrder,
   getOrderById,
   updateOrder,
+  addMsg,
 }

@@ -1,6 +1,7 @@
+import { Msg } from '../../models/msg.model.cjs'
 import { Order } from '../../models/order.model.cjs'
 import { dbService } from '../../services/db.service.cjs'
-
+import { utilService } from '../../services/util.service.cjs'
 import { loggerService } from '../../services/logger.service.cjs'
 
 import { ObjectId } from 'mongodb'
@@ -54,6 +55,20 @@ async function update(order: Order) {
   }
 }
 
+async function addMsg(orderId: string, msg: Msg) {
+  try {
+    const msgToAdd = { ...msg }
+    msgToAdd.id = utilService.makeId()
+    const orderToUpdate = await getById(orderId)
+    orderToUpdate.msgs = orderToUpdate.msgs.concat(msgToAdd)
+    const updatedOrder = await update(orderToUpdate)
+    return updatedOrder
+  } catch (err) {
+    loggerService.error(`cannot update message in order ${orderId}`, err)
+    throw err
+  }
+}
+
 // async function remove(orderId) {
 //   try {
 //     const store = asyncLocalStorage.getStore()
@@ -101,6 +116,7 @@ module.exports = {
   add,
   update,
   getById,
+  addMsg,
 }
 
 export const orderService = {
@@ -109,4 +125,5 @@ export const orderService = {
   add,
   update,
   getById,
+  addMsg,
 }
