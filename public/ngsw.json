@@ -1,0 +1,113 @@
+{
+  "configVersion": 1,
+  "timestamp": 1702023738630,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/favicon.ico",
+        "/index.html",
+        "/main.4df24660d28dcc94.js",
+        "/manifest.webmanifest",
+        "/polyfills.bba09f331de91aa4.js",
+        "/runtime.10255a2718fdc968.js",
+        "/styles.54387cdf61e19342.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/BebasNeue-Regular.1220bf5f26325112.ttf",
+        "/Roboto-Regular.0e6e4c28297310dc.ttf",
+        "/assets/font/BebasNeue-Regular.ttf",
+        "/assets/font/Roboto-Regular.ttf",
+        "/assets/icons/android-icon-airbnb.png",
+        "/assets/icons/icon-128x128.png",
+        "/assets/icons/icon-144x144.png",
+        "/assets/icons/icon-152x152.png",
+        "/assets/icons/icon-192x192.png",
+        "/assets/icons/icon-384x384.png",
+        "/assets/icons/icon-512x512.png",
+        "/assets/icons/icon-72x72.png",
+        "/assets/icons/icon-96x96.png",
+        "/assets/imgs/airbnbLogo.jpg",
+        "/assets/styles/basics/_animations.scss",
+        "/assets/styles/basics/_base.scss",
+        "/assets/styles/basics/_helpers.scss",
+        "/assets/styles/basics/_layout.scss",
+        "/assets/styles/basics/_modals.scss",
+        "/assets/styles/basics/_typography.scss",
+        "/assets/styles/basics/checkbox.scss",
+        "/assets/styles/setup/_functions.scss",
+        "/assets/styles/setup/_mixins.scss",
+        "/assets/styles/setup/_variables.scss"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/BebasNeue-Regular.1220bf5f26325112.ttf": "ac208c2416e2ad9f6324697b98b8fc7ccb338f9e",
+    "/Roboto-Regular.0e6e4c28297310dc.ttf": "ba879317acdc045b8fa78cb8f948650627d0477c",
+    "/assets/font/BebasNeue-Regular.ttf": "ac208c2416e2ad9f6324697b98b8fc7ccb338f9e",
+    "/assets/font/Roboto-Regular.ttf": "ba879317acdc045b8fa78cb8f948650627d0477c",
+    "/assets/icons/android-icon-airbnb.png": "2a565e85f52a271bd599359b1a610faaaa81f509",
+    "/assets/icons/icon-128x128.png": "b1f06c7d714abb4a0cc4d1f7c954feb26826e4c4",
+    "/assets/icons/icon-144x144.png": "96a0d629765c1bc85d9263c6bc83094ca776d267",
+    "/assets/icons/icon-152x152.png": "b1fbbee3902eb96a7658e3bb006f31f78ca5a44c",
+    "/assets/icons/icon-192x192.png": "e4211163bf0911688fbfb80278d8ff4d2f77691d",
+    "/assets/icons/icon-384x384.png": "329749cd6393768d3131ed6304c136b1ca05f2fd",
+    "/assets/icons/icon-512x512.png": "559d9c4318b45a1f2b10596bbb4c960fe521dbcc",
+    "/assets/icons/icon-72x72.png": "279825a1ac4377032ae996a1832c641e33ccf1b6",
+    "/assets/icons/icon-96x96.png": "592885efcbfee27e5e20be4fa3043589390d2740",
+    "/assets/imgs/airbnbLogo.jpg": "ac00974ec03112a90fe2db028063f1b3976cf962",
+    "/assets/styles/basics/_animations.scss": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "/assets/styles/basics/_base.scss": "6b3c115b08de796e9b5687ed25dae44b8014018a",
+    "/assets/styles/basics/_helpers.scss": "8c80979cb51f9f6c3f74af11f43137a0b72daa6c",
+    "/assets/styles/basics/_layout.scss": "a031a94e43cc2cfd209f1fef0597542d72e0bcd4",
+    "/assets/styles/basics/_modals.scss": "83fc00bacb3731d31a1763cd3cc17aca210ed9d2",
+    "/assets/styles/basics/_typography.scss": "8525ff827a0fe1a98b61af703cd6a2d2cef8abb8",
+    "/assets/styles/basics/checkbox.scss": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+    "/assets/styles/setup/_functions.scss": "61a058784ca6b913a932959bcd3e56f7ceb0ae7a",
+    "/assets/styles/setup/_mixins.scss": "3b556bb70055824d2c9d8e5abad7fe5f0c0df827",
+    "/assets/styles/setup/_variables.scss": "a0ef3890613922643cc0872d7e6667efce8bdfb1",
+    "/favicon.ico": "334e86dd53ee26f65165a283358733f753b14d59",
+    "/index.html": "4e7716da70000890fc4930845aab9eca49ff5e67",
+    "/main.4df24660d28dcc94.js": "dbf295f6bd46f1454d1a459a40359ceb4cad802a",
+    "/manifest.webmanifest": "d0c52dd2e23003808663f0ab0483643ea3758ccd",
+    "/polyfills.bba09f331de91aa4.js": "85174dd3193dd89bdd15c5d3b85cc8ddb0416428",
+    "/runtime.10255a2718fdc968.js": "2063979988557fdaf0b7a2c0573406af952514f5",
+    "/styles.54387cdf61e19342.css": "a14bdc8927ea2c8212af81ff11add50c8d9ebd86"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}

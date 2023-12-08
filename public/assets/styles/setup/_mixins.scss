@@ -1,0 +1,118 @@
+/* Breakpoint mixins - Mobile First 
+ @mixin for-narrow-layout {
+     @media (min-width: $mobile-breakpoint) {
+         @content;
+     }
+ }
+
+ @mixin for-normal-layout {
+     @media (min-width: $narrow-breakpoint) {
+         @content;
+     }
+ }
+
+ @mixin for-wide-layout {
+     @media (min-width: $normal-breakpoint) {
+         @content;
+     }
+ }
+*/
+/* Desktop First */
+/* Media Mixins */
+@mixin for-mobile-layout {
+  @media (max-width: $mobile-breakpoint) {
+    @content;
+  }
+}
+
+@mixin for-tablet-layout {
+  @media (min-width: $mobile-breakpoint) and (max-width: $tablet-breakpoint) {
+    @content;
+  }
+}
+
+@mixin for-normal-layout {
+  @media (min-width: $tablet-breakpoint) and (max-width: $normal-breakpoint) {
+    @content;
+  }
+}
+
+@mixin for-wide-layout {
+  @media (min-width: $normal-breakpoint) and (max-width: $wide-breakpoint) {
+    @content;
+  }
+}
+@mixin for-extra-wide-layout {
+  @media (min-width: $wide-breakpoint) {
+    @content;
+  }
+}
+
+@mixin for-wider-than-mobile {
+  @media (min-width: $mobile-breakpoint) {
+    @content;
+  }
+}
+
+/* Media  Mixins */
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  overflow: hidden;
+
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: calc(calc($height / $width) * 100%);
+    pointer-events: none;
+  }
+
+  & > img,
+  & > iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  > img {
+    object-fit: cover;
+  }
+}
+
+/* Mixin for removing hover effects on iphone screen*/
+@mixin hover-supported {
+  @media not all and (pointer: coarse) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
+@mixin quotes {
+  &::before {
+    content: open-quote;
+  }
+  &::after {
+    content: close-quote;
+  }
+}
+
+/* BORDER RADIUS MIXINS*/
+@mixin border-radius($top-left, $top-right, $bottom-right, $bottom-left) {
+  border-radius: $top-left $top-right $bottom-right $bottom-left;
+}
+
+/* GRID MIXINS*/
+@mixin grid-template($columns, $rows, $gap, $column-unit: 1fr, $row-unit: 1fr) {
+  display: grid;
+  grid-template: repeat($rows, $row-unit) / repeat($columns, $column-unit);
+  gap: $gap;
+}
+
+@mixin grid-item($col-start, $col-end, $row-start, $row-end) {
+  grid-area: #{$row-start} / #{$col-start} / #{$row-end} / #{$col-end};
+}
