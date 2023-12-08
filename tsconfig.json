@@ -9,7 +9,7 @@
   },
   "include": [
     "src/**/*",
-    "src/server.ts",
+    "src/server.mts",
     "config",
     "api",
     "models",
