@@ -11,7 +11,8 @@
     "prod": "set NODE_ENV=production&&node dist/server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "prebuild": "rimraf dist",
-    "build": "tsc"
+    "build": "tsc",
+    "prod:build": "tsc"
   },
   "keywords": [],
   "author": "",
