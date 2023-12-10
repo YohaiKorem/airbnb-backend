@@ -161,6 +161,7 @@ async function addFromSocial(socialUser) {
 
     const collection = await dbService.getCollection('user')
     await collection.insertOne(newUser)
+
     return newUser
   } catch (err) {
     loggerService.error('cannot insert user', err)

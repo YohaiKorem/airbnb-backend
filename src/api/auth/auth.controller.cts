@@ -80,6 +80,7 @@ async function verifySocialToken(req, res) {
 async function socialSignIn(responseData, req, res) {
   const { name } = responseData
   const { provider, id } = req.query
+
   let user
   try {
     user = await userService.getBySocialId(id)
