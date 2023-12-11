@@ -69,8 +69,9 @@ async function addOrder(req, res) {
 }
 
 async function addMsg(req, res) {
-  const { msg } = req.body
+  const msg = req.body
   const { id } = req.params
+
   try {
     const updatedOrder = await orderService.addMsg(id, msg)
     return res.json(updatedOrder)
