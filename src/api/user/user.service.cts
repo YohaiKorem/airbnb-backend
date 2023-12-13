@@ -15,6 +15,7 @@ module.exports = {
   add,
   addFromSocial,
   getBySocialId,
+  // replaceRoboHash,
   // initUserData,
 }
 
@@ -170,6 +171,23 @@ async function addFromSocial(socialUser) {
     throw err
   }
 }
+
+// export async function replaceRoboHash() {
+//   const collection = await dbService.getCollection('user')
+//   const users = await collection.find().toArray()
+//   users.forEach(async (user, idx) => {
+//     if (user.imgUrl && user.imgUrl.includes('robohash')) {
+//       const userToUpdate = { ...user }
+//       let gender = 'men'
+//       if (Math.floor(idx / 100) % 2 === 1) gender = 'women'
+//       const imageUrlIndex = idx % 100
+//       delete userToUpdate.imgUrl
+//       userToUpdate.imgurl = `https://randomuser.me/api/portraits/${gender}/${imageUrlIndex}.jpg`
+//       const updatedUser = await update(user)
+//       loggerService.debug('updatedUser', updatedUser)
+//     }
+//   })
+// }
 
 function _buildCriteria(filterBy) {
   const criteria = {}
