@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1702477254464,
+  "timestamp": 1703594368415,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/favicon.ico",
         "/index.html",
-        "/main.7c4adf626fe6067a.js",
+        "/main.429fe88a1348b103.js",
         "/manifest.webmanifest",
         "/polyfills.bba09f331de91aa4.js",
         "/runtime.10255a2718fdc968.js",
@@ -42,6 +42,7 @@
         "/assets/icons/icon-512x512.png",
         "/assets/icons/icon-72x72.png",
         "/assets/icons/icon-96x96.png",
+        "/assets/icons/therapist-stock-photo.jpg",
         "/assets/imgs/airbnbLogo.jpg",
         "/assets/styles/basics/_animations.scss",
         "/assets/styles/basics/_base.scss",
@@ -72,6 +73,7 @@
     "/assets/icons/icon-512x512.png": "559d9c4318b45a1f2b10596bbb4c960fe521dbcc",
     "/assets/icons/icon-72x72.png": "279825a1ac4377032ae996a1832c641e33ccf1b6",
     "/assets/icons/icon-96x96.png": "592885efcbfee27e5e20be4fa3043589390d2740",
+    "/assets/icons/therapist-stock-photo.jpg": "ebfabd677bd564aa6204dbcd1ca77f5d9a397f96",
     "/assets/imgs/airbnbLogo.jpg": "ac00974ec03112a90fe2db028063f1b3976cf962",
     "/assets/styles/basics/_animations.scss": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
     "/assets/styles/basics/_base.scss": "d15d02340768b5d4b7500110416342e3d3882c31",
@@ -84,8 +86,8 @@
     "/assets/styles/setup/_mixins.scss": "3b556bb70055824d2c9d8e5abad7fe5f0c0df827",
     "/assets/styles/setup/_variables.scss": "cccb40435675dd0270aabc12b373d3a5c0955ac3",
     "/favicon.ico": "334e86dd53ee26f65165a283358733f753b14d59",
-    "/index.html": "8736d7bab5bf707de57dfb394cf60c0aacdf3359",
-    "/main.7c4adf626fe6067a.js": "f9510f710685273094b6a67cdd97080524731ff0",
+    "/index.html": "ca84f5caefd38beb821284ab4d0244221ec765a3",
+    "/main.429fe88a1348b103.js": "7cc1d7f6398dadabc90bd214418e7ef7af189b2d",
     "/manifest.webmanifest": "d0c52dd2e23003808663f0ab0483643ea3758ccd",
     "/polyfills.bba09f331de91aa4.js": "85174dd3193dd89bdd15c5d3b85cc8ddb0416428",
     "/runtime.10255a2718fdc968.js": "2063979988557fdaf0b7a2c0573406af952514f5",
